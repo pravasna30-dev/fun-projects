@@ -15,3 +15,35 @@
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+*.o
+*.obj
+*.a
+*.lib
+*.out
+*.elf
+*.hex
+*.map
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# Disk images
+*.dmg
+*.iso
+*.img
+
+# Firmware / ESP32 build artifacts
+*.bin
+build/
