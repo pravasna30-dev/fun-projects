@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Everything About Nuts — An Interactive Lesson</title>
+<meta name="description" content="The secret world of nuts: where each one came from, how it travelled the globe, who grows it now, and a quiz to prove you were paying attention.">
+<style>
+  :root {
+    --ink: #221d16;
+    --paper: #f4ede0;
+    --paper-2: #fffdf8;
+    --line: #e0d5c0;
+    --terra: #b5512f;
+    --green: #2f6f5e;
+    --gold: #c9962b;
+    --blue: #3f6f99;
+    --muted: #7c7264;
+    --ocean: #e8efe9;
+    --land: #ded3bd;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    color: var(--ink); background: var(--paper); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 22px; }
+  .mono { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+
+  /* ===== NAV ===== */
+  nav.top {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: blur(8px);
+    background: rgba(244,237,224,.86); border-bottom: 1px solid var(--line);
+  }
+  nav.top .row { display: flex; align-items: center; gap: 18px; padding: 12px 22px; max-width: 1100px; margin: 0 auto; }
+  nav.top .home { text-decoration: none; font-weight: 800; color: var(--terra); white-space: nowrap; }
+  nav.top .links { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
+  nav.top .links a {
+    text-decoration: none; color: var(--muted); font-size: .82rem; padding: 6px 11px;
+    border-radius: 999px; letter-spacing: .02em; transition: background .2s, color .2s;
+  }
+  nav.top .links a:hover, nav.top .links a.active { background: var(--ink); color: var(--paper); }
+  .progress { height: 3px; background: linear-gradient(90deg, var(--terra), var(--gold)); width: 0%; transition: width .15s; }
+
+  /* ===== HERO ===== */
+  header.hero { text-align: center; padding: 80px 0 50px; }
+  .hero .kick { font-size: .74rem; letter-spacing: .3em; text-transform: uppercase; color: var(--terra); margin-bottom: 18px; }
+  .hero h1 { font-size: clamp(2.6rem, 7vw, 5rem); font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+  .hero h1 em { color: var(--terra); font-weight: 500; }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 640px; margin: 22px auto 0; }
+  .scroll-cue { margin-top: 40px; font-size: .8rem; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; }
+  .scroll-cue span { display: block; font-size: 1.4rem; animation: bob 1.8s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(7px);} }
+
+  section { padding: 64px 0; border-top: 1px solid var(--line); }
+  .sec-label { font-size: .74rem; letter-spacing: .26em; text-transform: uppercase; color: var(--terra); margin-bottom: 10px; }
+  h2.title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -.015em; margin-bottom: 12px; }
+  .lede { font-size: 1.08rem; color: var(--muted); max-width: 680px; margin-bottom: 28px; }
+
+  /* ===== BOTANY CARDS ===== */
+  .botany { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; }
+  .bcard { background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; padding: 20px; border-top: 4px solid var(--c); }
+  .bcard .ico { font-size: 1.8rem; }
+  .bcard h4 { margin: 6px 0 4px; font-size: 1.1rem; }
+  .bcard .cat { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--c); font-weight: 700; }
+  .bcard p { font-size: .9rem; color: var(--muted); margin-top: 8px; }
+
+  /* ===== EXPLORER ===== */
+  .explorer { display: grid; grid-template-columns: 220px 1fr; gap: 24px; align-items: start; }
+  .nutlist { display: flex; flex-direction: column; gap: 7px; position: sticky; top: 74px; }
+  .nutbtn {
+    display: flex; align-items: center; gap: 10px; text-align: left; cursor: pointer;
+    background: var(--paper-2); border: 1px solid var(--line); border-radius: 11px;
+    padding: 9px 12px; font: inherit; color: var(--ink); transition: all .18s; position: relative;
+  }
+  .nutbtn:hover { border-color: var(--terra); transform: translateX(3px); }
+  .nutbtn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .nutbtn .e { font-size: 1.3rem; }
+  .nutbtn .n { font-weight: 700; font-size: .95rem; }
+  .nutbtn .dot { width: 8px; height: 8px; border-radius: 50%; margin-left: auto; flex-shrink: 0; }
+
+  .stage { background: var(--paper-2); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+  .mapbox { position: relative; background: var(--ocean); }
+  .mapbox svg { display: block; width: 100%; height: auto; }
+  .grid-line { stroke: #d4ddd5; stroke-width: .5; }
+  .continent { fill: var(--land); stroke: #cdbfa2; stroke-width: 1; stroke-linejoin: round; }
+  .clabel { fill: #b3a888; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-anchor: middle; font-family: "SF Mono", monospace; text-transform: uppercase; }
+  .journey-path { fill: none; stroke-width: 2.4; stroke-linecap: round; }
+  .pin-origin { fill: var(--terra); }
+  .pin-dest { fill: var(--green); }
+  .pin-ring { fill: none; stroke-width: 2; opacity: .9; }
+  .pin-label { font-size: 11px; font-weight: 700; font-family: "SF Mono", monospace; paint-order: stroke; stroke: #fff; stroke-width: 3px; }
+  .traveller { filter: drop-shadow(0 0 4px rgba(181,81,47,.9)); }
+
+  .story { padding: 22px 26px 26px; border-top: 1px solid var(--line); }
+  .story .top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .story .top .big { font-size: 2.2rem; }
+  .story .top h3 { font-size: 1.5rem; font-weight: 800; }
+  .story .badge { font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; color: #fff; }
+  .story p { margin-top: 12px; color: #4b4338; }
+  .story .wow { margin-top: 14px; background: #fbf3e2; border-left: 3px solid var(--gold); padding: 11px 14px; border-radius: 8px; font-size: .96rem; }
+  .story .producers { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .pchip { display: inline-flex; align-items: center; gap: 6px; background: var(--paper); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: .85rem; }
+  .pchip .fl { font-size: 1.1rem; }
+  .pchip .rank { color: var(--muted); font-size: .72rem; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; padding: 10px 26px; font-size: .8rem; color: var(--muted); }
+  .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+  .replay { margin-left: auto; background: var(--terra); color: #fff; border: 0; border-radius: 999px; padding: 6px 14px; font: inherit; font-size: .82rem; cursor: pointer; }
+  .replay:hover { background: #97401f; }
+
+  /* ===== CONTINENT RANKINGS ===== */
+  .continents { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+  .ccard { background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  .ccard h3 { font-size: 1.2rem; display: flex; align-items: center; gap: 9px; }
+  .ccard .sig { font-size: .78rem; color: var(--terra); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin: 4px 0 12px; }
+  .ccard ol { list-style: none; counter-reset: r; }
+  .ccard li { counter-increment: r; display: flex; align-items: center; gap: 9px; padding: 5px 0; border-bottom: 1px dashed var(--line); font-size: .94rem; }
+  .ccard li:last-child { border-bottom: 0; }
+  .ccard li::before { content: counter(r); font-family: "SF Mono", monospace; font-size: .72rem; color: #fff; background: var(--green); width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ccard li .fl { margin-left: auto; font-size: 1.1rem; }
+
+  .states { margin-top: 30px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .states table { width: 100%; border-collapse: collapse; }
+  .states th, .states td { text-align: left; padding: 11px 16px; font-size: .92rem; border-bottom: 1px solid var(--line); }
+  .states th { background: var(--ink); color: var(--paper); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; }
+  .states tr:last-child td { border-bottom: 0; }
+  .states td .fl { margin-right: 6px; }
+
+  /* ===== QUIZ ===== */
+  .quiz { background: var(--paper-2); border: 1px solid var(--line); border-radius: 18px; padding: 8px 26px 26px; }
+  .qprog { font-family: "SF Mono", monospace; font-size: .8rem; color: var(--muted); padding-top: 18px; }
+  .qcard h3 { font-size: 1.3rem; margin: 8px 0 4px; }
+  .qflag { font-size: 4.5rem; text-align: center; margin: 6px 0; }
+  .qopts { display: grid; gap: 10px; margin-top: 14px; }
+  .qopt {
+    text-align: left; font: inherit; font-size: 1rem; cursor: pointer;
+    background: var(--paper); border: 1.5px solid var(--line); border-radius: 11px; padding: 13px 16px;
+    transition: all .15s; display: flex; align-items: center; gap: 10px;
+  }
+  .qopt:hover:not(:disabled) { border-color: var(--terra); }
+  .qopt.correct { border-color: var(--green); background: #e7f3ee; }
+  .qopt.wrong { border-color: var(--terra); background: #fbeae3; }
+  .qopt .mk { margin-left: auto; font-weight: 800; }
+  .qfeed { margin-top: 14px; font-size: .96rem; min-height: 24px; }
+  .qnext { margin-top: 16px; background: var(--ink); color: var(--paper); border: 0; border-radius: 999px; padding: 11px 24px; font: inherit; font-weight: 700; cursor: pointer; }
+  .qnext:disabled { opacity: .35; cursor: not-allowed; }
+  .qresult { text-align: center; padding: 20px 0; }
+  .qresult .score { font-size: 4rem; font-weight: 800; color: var(--terra); line-height: 1; }
+  .qresult .tier { font-size: 1.4rem; font-weight: 800; margin: 8px 0; }
+  .qresult p { color: var(--muted); }
+  .qresult button { margin-top: 18px; }
+
+  /* ===== ATLAS ===== */
+  .atlas-controls { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+  .toggle { display: inline-flex; align-items: center; gap: 9px; cursor: pointer; font-size: .92rem; color: var(--muted); }
+  .toggle input { width: 38px; height: 21px; appearance: none; background: var(--line); border-radius: 999px; position: relative; cursor: pointer; transition: background .2s; }
+  .toggle input:checked { background: var(--terra); }
+  .toggle input::after { content: ""; position: absolute; top: 2px; left: 2px; width: 17px; height: 17px; background: #fff; border-radius: 50%; transition: transform .2s; }
+  .toggle input:checked::after { transform: translateX(17px); }
+
+  .bars { display: flex; flex-direction: column; gap: 10px; }
+  .bar { display: grid; grid-template-columns: 150px 1fr; gap: 12px; align-items: center; }
+  .bar .blabel { display: flex; align-items: center; gap: 8px; font-size: .94rem; }
+  .bar .blabel .e { font-size: 1.2rem; }
+  .bar .track { background: var(--paper-2); border: 1px solid var(--line); border-radius: 9px; height: 38px; position: relative; overflow: hidden; }
+  .bar .fill { height: 100%; width: 0; border-radius: 8px 0 0 8px; transition: width 1.1s cubic-bezier(.2,.7,.3,1); display: flex; align-items: center; padding-left: 12px; gap: 8px; white-space: nowrap; }
+  .bar .fill .v { color: #fff; font-weight: 800; font-size: .9rem; text-shadow: 0 1px 2px rgba(0,0,0,.25); }
+  .bar .fill .fl { font-size: 1.1rem; }
+  .bar.imposter .blabel .e { position: relative; }
+  .bar .note { font-size: .68rem; color: var(--muted); margin-left: 4px; }
+
+  footer { padding: 56px 0; text-align: center; color: var(--muted); border-top: 1px solid var(--line); }
+  footer a { color: var(--green); font-weight: 700; text-decoration: none; }
+  .disclaim { font-size: .78rem; color: var(--muted); max-width: 720px; margin: 22px auto 0; font-style: italic; }
+
+  @media (max-width: 760px) {
+    .explorer { grid-template-columns: 1fr; }
+    .nutlist { position: static; flex-direction: row; flex-wrap: wrap; }
+    .nutbtn { flex: 1 1 130px; }
+    .bar { grid-template-columns: 110px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="row">
+    <a class="home" href="../">← Fun Projects</a>
+    <div class="links">
+      <a href="#start">Intro</a>
+      <a href="#explore">Explore</a>
+      <a href="#ranks">Rankings</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#atlas">Atlas</a>
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+</nav>
+
+<header class="hero" id="start">
+  <div class="wrap">
+    <div class="kick">An interactive lesson</div>
+    <h1>Everything You<br>Never Knew About <em>Nuts</em></h1>
+    <p>From radioactive Brazil nuts to "nuts" that are secretly fruit, beans, and seeds — follow each one from its wild birthplace across the planet to your snack bowl.</p>
+    <div class="scroll-cue">Scroll to begin<span>↓</span></div>
+  </div>
+</header>
+
+<!-- ===== INTRO: WHAT IS A NUT ===== -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">First, a confession</div>
+    <h2 class="title">Most "nuts" are lying to you</h2>
+    <p class="lede">Botanists are strict: a <strong>true nut</strong> is a dry, hard-shelled fruit that does <em>not</em> split open to release its single seed. By that rule, almost nothing in the mixed-nut tin qualifies. Here's what your favourites actually are:</p>
+    <div class="botany" id="botany"></div>
+    <p class="disclaim">So when we say "nut" for the rest of this lesson, we mean it the way your grocery store does — the culinary club, imposters and all.</p>
+  </div>
+</section>
+
+<!-- ===== EXPLORER ===== -->
+<section id="explore">
+  <div class="wrap">
+    <div class="sec-label">The great migration</div>
+    <h2 class="title">Where every nut came from</h2>
+    <p class="lede">Pick a nut. Watch it travel from the <span style="color:var(--terra);font-weight:700;">wild origin</span> where its tree first grew, to the <span style="color:var(--green);font-weight:700;">places that grow it</span> today. Almost every one of these journeys was powered by trade, empire, or a single determined botanist.</p>
+
+    <div class="explorer">
+      <div class="nutlist" id="nutlist"></div>
+
+      <div class="stage">
+        <div class="mapbox" id="mapbox"></div>
+        <div class="legend">
+          <span><i style="background:var(--terra)"></i>Wild origin</span>
+          <span><i style="background:var(--green)"></i>Grown today</span>
+          <button class="replay" id="replay">▶ Replay journey</button>
+        </div>
+        <div class="story" id="story"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== RANKINGS ===== -->
+<section id="ranks">
+  <div class="wrap">
+    <div class="sec-label">Who rules what</div>
+    <h2 class="title">Nuts ranked by continent</h2>
+    <p class="lede">Each continent has its signature nut — usually the one whose tree it gave the world, or the one its climate happens to adore. Top producing countries are listed in order.</p>
+    <div class="continents" id="continents"></div>
+
+    <h3 style="margin-top:34px;font-size:1.3rem;">🇺🇸 ...and the states &amp; regions that dominate production</h3>
+    <div class="states">
+      <table>
+        <thead><tr><th>Nut</th><th>Powerhouse region</th><th>Why it matters</th></tr></thead>
+        <tbody id="statesbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== QUIZ ===== -->
+<section id="quiz">
+  <div class="wrap">
+    <div class="sec-label">Prove you were listening</div>
+    <h2 class="title">The Nut Quiz</h2>
+    <p class="lede">Guess-the-flag, count-the-countries, spot-the-imposter. No pressure — the answers are all above.</p>
+    <div class="quiz" id="quizbox"></div>
+  </div>
+</section>
+
+<!-- ===== ATLAS ===== -->
+<section id="atlas">
+  <div class="wrap">
+    <div class="sec-label">The final tally</div>
+    <h2 class="title">The Global Nut Atlas</h2>
+    <p class="lede">Every nut in this lesson, ranked by how much the world grows each year (annual production, rough figures), with the flag of its #1 producer. Spot the twist: the two biggest "nuts" on Earth aren't nuts at all.</p>
+    <div class="atlas-controls">
+      <label class="toggle"><input type="checkbox" id="impostToggle" checked> Include the imposters (peanut &amp; coconut)</label>
+    </div>
+    <div class="bars" id="bars"></div>
+    <p class="disclaim">Production figures are approximate annual tonnages (in-shell where applicable) drawn from public FAO-style agricultural data, rounded for clarity. Great for relative scale, not for your thesis.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Built for <a href="../">Fun Projects</a> · inspired by the video <em>"Everything You Never Knew About Nuts."</em></p>
+    <p style="margin-top:8px;font-size:.85rem;">Go eat a hazelnut — it's one of the few real ones. 🌰</p>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   DATA — botany categories, nuts, journeys, producers, volumes
+   ============================================================ */
+const CATS = {
+  true_:  { name: "True nut",   color: "#c9962b", blurb: "A real, dry, single-seeded fruit that stays sealed. The genuine article." },
+  drupe:  { name: "Drupe",      color: "#b5512f", blurb: "A stone fruit, like a peach. We eat the seed inside the pit, not the flesh." },
+  seed:   { name: "Seed",       color: "#2f6f5e", blurb: "Just a plain seed from a cone or capsule — no fruit wall around it." },
+  legume: { name: "Legume",     color: "#3f6f99", blurb: "A bean. Grows in a pod, underground. More kin to peas than to walnuts." }
+};
+
+// lat/lng are REAL coordinates, projected onto the map below.
+const NUTS = [
+  {
+    id:"almond", name:"Almond", e:"🌰", cat:"drupe", volume:3900000,
+    hook:"The pit of a fruit cousin to the peach.",
+    origin:{lat:35,lng:55,label:"Central Asia / Iran"},
+    journeys:[
+      {lat:42,lng:13,label:"Mediterranean"},
+      {lat:37,lng:-120,label:"California"}
+    ],
+    producers:[
+      {c:"United States",flag:"🇺🇸",note:"~80% of world, all from California"},
+      {c:"Spain",flag:"🇪🇸"},
+      {c:"Australia",flag:"🇦🇺"}
+    ],
+    story:"Wild almonds carried a deadly secret — many were bitter with cyanide. Ancient farmers in Central Asia found the rare sweet trees and propagated them, taming the almond thousands of years ago. It rode trade routes to the Mediterranean, then Spanish missionaries carried it to California, which now grows roughly four out of every five almonds on Earth.",
+    wow:"It takes about 12 litres of water to grow a single almond — which is why California's drought years make global headlines."
+  },
+  {
+    id:"walnut", name:"Walnut", e:"🌰", cat:"drupe", volume:2600000,
+    hook:"The brain-shaped seed of a Persian drupe.",
+    origin:{lat:36,lng:52,label:"Persia / Central Asia"},
+    journeys:[
+      {lat:45,lng:5,label:"Europe (Roman roads)"},
+      {lat:34,lng:108,label:"China"},
+      {lat:37,lng:-120,label:"California"}
+    ],
+    producers:[
+      {c:"China",flag:"🇨🇳"},
+      {c:"United States",flag:"🇺🇸",note:"California"},
+      {c:"Iran",flag:"🇮🇷"}
+    ],
+    story:"The 'English' walnut isn't English at all — it's Persian. The Romans called it the 'royal nut' and spread it across their empire along their roads. It travelled the Silk Road east into China, which today out-grows everyone, while California leads the Western trade.",
+    wow:"The walnut's wrinkled, two-lobed shape has been a folk symbol for the brain for centuries — and it's unusually rich in brain-friendly omega-3s."
+  },
+  {
+    id:"cashew", name:"Cashew", e:"🥜", cat:"drupe", volume:4000000,
+    hook:"A seed dangling beneath a tropical fruit — with a toxic shell.",
+    origin:{lat:-7,lng:-38,label:"Northeast Brazil"},
+    journeys:[
+      {lat:15,lng:74,label:"India (Goa)"},
+      {lat:7,lng:-5,label:"West Africa"},
+      {lat:14,lng:108,label:"Vietnam"}
+    ],
+    producers:[
+      {c:"Ivory Coast",flag:"🇨🇮",note:"top grower of raw nuts"},
+      {c:"India",flag:"🇮🇳",note:"top processor"},
+      {c:"Vietnam",flag:"🇻🇳",note:"top processor"}
+    ],
+    story:"The cashew grows on the bottom of a bright 'cashew apple,' and its shell contains urushiol — the same caustic oil as poison ivy. That's why you never see a raw cashew in its shell at the store; every one is carefully roasted and shelled first. Portuguese traders carried it from Brazil to India and Africa in the 1500s, and West Africa now grows the most raw nuts while India and Vietnam do most of the shelling.",
+    wow:"A cashew is never sold 'raw' — the so-called raw cashews in shops are steamed to destroy the poison-ivy toxin in their shells."
+  },
+  {
+    id:"pistachio", name:"Pistachio", e:"🥜", cat:"drupe", volume:1300000,
+    hook:"The 'smiling' nut that splits its own shell.",
+    origin:{lat:33,lng:53,label:"Iran / Central Asia"},
+    journeys:[
+      {lat:38,lng:35,label:"Turkey & Levant"},
+      {lat:36,lng:-119,label:"California"}
+    ],
+    producers:[
+      {c:"United States",flag:"🇺🇸",note:"recently overtook Iran"},
+      {c:"Iran",flag:"🇮🇷"},
+      {c:"Turkey",flag:"🇹🇷"}
+    ],
+    story:"Pistachios have been prized in Persia for at least 9,000 years — the Queen of Sheba supposedly hoarded them. The shell splits open naturally as the nut ripens, giving its famous 'smile.' Iran was the historic king of pistachios until California's Central Valley, planted heavily from the 1970s, recently took the global crown.",
+    wow:"Freshly harvested pistachios can spontaneously combust if stored damp in bulk — the oils heat up and self-ignite."
+  },
+  {
+    id:"hazelnut", name:"Hazelnut", e:"🌰", cat:"true_", volume:1100000,
+    hook:"A genuine, certified true nut.",
+    origin:{lat:41,lng:37,label:"Black Sea coast, Turkey"},
+    journeys:[
+      {lat:42,lng:13,label:"Italy"},
+      {lat:45,lng:-123,label:"Oregon, USA"}
+    ],
+    producers:[
+      {c:"Turkey",flag:"🇹🇷",note:"~65% of world"},
+      {c:"Italy",flag:"🇮🇹"},
+      {c:"United States",flag:"🇺🇸",note:"Oregon"}
+    ],
+    story:"The hazelnut is one of the only true nuts in the whole tin. The steep, humid hills along Turkey's Black Sea coast are perfect for it, and Turkey alone grows roughly two-thirds of the world's supply — which is why a single bad Turkish frost can spike the global price of chocolate-hazelnut spread.",
+    wow:"One famous hazelnut-cocoa spread uses about a quarter of the entire world's hazelnut crop every year."
+  },
+  {
+    id:"chestnut", name:"Chestnut", e:"🌰", cat:"true_", volume:2400000,
+    hook:"A true nut you roast — and that once built America.",
+    origin:{lat:40,lng:30,label:"Asia Minor & S. Europe"},
+    journeys:[
+      {lat:42,lng:0,label:"Spain & Italy"},
+      {lat:32,lng:110,label:"China"}
+    ],
+    producers:[
+      {c:"China",flag:"🇨🇳",note:"~80% of world"},
+      {c:"Spain",flag:"🇪🇸"},
+      {c:"Turkey",flag:"🇹🇷"}
+    ],
+    story:"Another genuine true nut — and a starchy one, more like a grain than an oily snack. American chestnuts once made up a quarter of Eastern US forests until a blight wiped out billions of trees in the early 1900s. Today China grows the vast majority, and the chestnut survives mostly as a winter roasting treat.",
+    wow:"Unlike other nuts, chestnuts are low in fat and high in vitamin C — a roasted chestnut is closer to a baked potato than to an almond."
+  },
+  {
+    id:"pecan", name:"Pecan", e:"🌰", cat:"drupe", volume:300000,
+    hook:"North America's only major native nut tree.",
+    origin:{lat:33,lng:-91,label:"Mississippi River valley"},
+    journeys:[
+      {lat:26,lng:-103,label:"Northern Mexico"},
+      {lat:-29,lng:24,label:"South Africa"}
+    ],
+    producers:[
+      {c:"United States",flag:"🇺🇸",note:"Georgia, New Mexico, Texas"},
+      {c:"Mexico",flag:"🇲🇽"},
+      {c:"South Africa",flag:"🇿🇦"}
+    ],
+    story:"The pecan is a true American original — its name comes from an Algonquin word for a nut that needs a stone to crack. Indigenous peoples ate and traded it for thousands of years before it was ever farmed. It's a hickory, and it remains overwhelmingly a North American crop, though South Africa has become a fast-rising counter-season grower.",
+    wow:"Pecan pie only became an American staple in the 1900s — popularised by, of all things, recipes printed on bottles of corn syrup."
+  },
+  {
+    id:"brazil", name:"Brazil nut", e:"🌰", cat:"seed", volume:70000,
+    hook:"A wild rainforest seed that's mildly radioactive.",
+    origin:{lat:-6,lng:-63,label:"Amazon basin"},
+    journeys:[
+      {lat:-14,lng:-66,label:"Bolivia"},
+      {lat:-12,lng:-77,label:"Peru"}
+    ],
+    producers:[
+      {c:"Bolivia",flag:"🇧🇴",note:"top exporter"},
+      {c:"Brazil",flag:"🇧🇷"},
+      {c:"Peru",flag:"🇵🇪"}
+    ],
+    story:"You almost can't farm a Brazil nut. Its towering Amazon tree depends on a specific large-bodied bee to pollinate it and a single rodent — the agouti — strong enough to crack its cannonball-like pods and bury the seeds. So nearly every Brazil nut is still wild-harvested from intact rainforest, which makes it a rare crop that's worth more standing than felled.",
+    wow:"Brazil nuts are the most radioactive food you can buy — their deep roots concentrate natural radium from the soil. Perfectly safe to eat, just don't put a tonne of them through an airport scanner."
+  },
+  {
+    id:"macadamia", name:"Macadamia", e:"🌰", cat:"seed", volume:240000,
+    hook:"Australia's gift, made famous in Hawaii.",
+    origin:{lat:-26,lng:152,label:"Queensland rainforest"},
+    journeys:[
+      {lat:20,lng:-156,label:"Hawaii"},
+      {lat:-29,lng:24,label:"South Africa"},
+      {lat:0,lng:37,label:"Kenya"}
+    ],
+    producers:[
+      {c:"South Africa",flag:"🇿🇦"},
+      {c:"Australia",flag:"🇦🇺",note:"its native home"},
+      {c:"Kenya",flag:"🇰🇪"}
+    ],
+    story:"The macadamia is the only major food crop native to Australia, where Aboriginal peoples ate it for millennia. Settlers shipped it to Hawaii, which built the first big industry and made it world-famous. Its shell is one of the hardest of any nut — it takes hundreds of pounds of force to crack — which is part of why it's the priciest nut on the shelf.",
+    wow:"Macadamia leaves and shells are toxic to dogs, and the nut's shell is so tough that early growers struggled for decades to mechanise cracking it."
+  },
+  {
+    id:"peanut", name:"Peanut", e:"🥜", cat:"legume", volume:54000000,
+    hook:"Not a nut at all — a bean that grows underground.",
+    origin:{lat:-20,lng:-62,label:"South America (Gran Chaco)"},
+    journeys:[
+      {lat:7,lng:8,label:"West Africa"},
+      {lat:21,lng:78,label:"India"},
+      {lat:34,lng:113,label:"China"},
+      {lat:32,lng:-84,label:"US South"}
+    ],
+    producers:[
+      {c:"China",flag:"🇨🇳"},
+      {c:"India",flag:"🇮🇳"},
+      {c:"Nigeria",flag:"🇳🇬"}
+    ],
+    story:"The peanut is a legume — kin to peas and lentils — and it does something bizarre: after flowering above ground, its stalk bends down and pushes the pod into the soil to ripen. Native to South America, it was carried by traders to Africa and Asia, then back to North America, where George Washington Carver later championed hundreds of uses for it. By sheer tonnage it dwarfs every true nut combined.",
+    wow:"Peanuts grow underground, are technically beans, and yet outweigh the entire global tree-nut harvest — the biggest imposter in the bowl."
+  },
+  {
+    id:"pinenut", name:"Pine nut", e:"🌰", cat:"seed", volume:30000,
+    hook:"A seed plucked, one by one, from pine cones.",
+    origin:{lat:43,lng:129,label:"Pine forests of E. Asia"},
+    journeys:[
+      {lat:40,lng:-4,label:"Mediterranean (stone pine)"},
+      {lat:55,lng:90,label:"Siberia"}
+    ],
+    producers:[
+      {c:"China",flag:"🇨🇳"},
+      {c:"Russia",flag:"🇷🇺"},
+      {c:"South Korea",flag:"🇰🇷"}
+    ],
+    story:"Pine nuts are gymnosperm seeds — they come straight from pine cones, with no fruit at all. Different species are harvested across Asia and the Mediterranean, much of it by hand from wild or semi-wild trees, which is why this tiny seed is one of the most expensive foods by weight.",
+    wow:"Some pine nuts can cause 'pine mouth' — a harmless but maddening metallic taste that lingers for days after eating them."
+  },
+  {
+    id:"coconut", name:"Coconut", e:"🥥", cat:"drupe", volume:62000000,
+    hook:"A giant fibrous drupe that sailed the oceans.",
+    origin:{lat:8,lng:115,label:"Indo-Pacific shores"},
+    journeys:[
+      {lat:0,lng:120,label:"Indonesia"},
+      {lat:13,lng:122,label:"Philippines"},
+      {lat:11,lng:77,label:"India"}
+    ],
+    producers:[
+      {c:"Indonesia",flag:"🇮🇩"},
+      {c:"Philippines",flag:"🇵🇭"},
+      {c:"India",flag:"🇮🇳"}
+    ],
+    story:"The coconut is botanically a drupe — the same fruit family as the cherry — and the 'nut' is the seed within. Its buoyant, waterproof husk let it raft across oceans and colonise tropical coastlines long before humans helped it along. Today it's the other giant 'nut' that isn't a nut, grown across the tropical belt.",
+    wow:"A coconut can float across an entire ocean and still sprout when it washes ashore — nature's original long-distance seed pod."
+  }
+];
+
+/* Continent rankings (signature nut + ordered top producers) */
+const CONTINENTS = [
+  { name:"Asia", emoji:"🌏", sig:"Walnut · Pistachio · Pine nut",
+    rows:[["China","🇨🇳"],["Iran","🇮🇷"],["Turkey","🇹🇷"],["India","🇮🇳"]] },
+  { name:"Europe", emoji:"🌍", sig:"Hazelnut · Chestnut · Almond",
+    rows:[["Turkey*","🇹🇷"],["Italy","🇮🇹"],["Spain","🇪🇸"]] },
+  { name:"North America", emoji:"🌎", sig:"Almond · Pistachio · Pecan",
+    rows:[["United States","🇺🇸"],["Mexico","🇲🇽"]] },
+  { name:"South America", emoji:"🌎", sig:"Brazil nut · Peanut's homeland",
+    rows:[["Bolivia","🇧🇴"],["Brazil","🇧🇷"],["Peru","🇵🇪"]] },
+  { name:"Africa", emoji:"🌍", sig:"Cashew · Macadamia",
+    rows:[["Ivory Coast","🇨🇮"],["South Africa","🇿🇦"],["Nigeria","🇳🇬"]] },
+  { name:"Australia", emoji:"🦘", sig:"Macadamia — its native gift",
+    rows:[["Australia","🇦🇺"]] }
+];
+
+const STATES = [
+  ["🌰 Almond","California, USA 🇺🇸","Its Central Valley grows ~80% of ALL almonds on Earth."],
+  ["🌰 Pecan","Georgia, New Mexico & Texas, USA 🇺🇸","The native range became the commercial heartland."],
+  ["🌰 Hazelnut","Oregon, USA 🇺🇸","The Willamette Valley grows ~99% of US hazelnuts."],
+  ["🥜 Pistachio","California, USA 🇺🇸","Hot, dry Central Valley summers mimic ancient Persia."],
+  ["🌰 Chestnut","Shandong & Hebei, China 🇨🇳","China's eastern provinces lead its ~80% world share."],
+  ["🥜 Peanut","Gujarat & Rajasthan, India 🇮🇳","India's dry western states are groundnut country."]
+];
+
+/* ============================================================
+   MAP — equirectangular projection onto a 1000 x 500 grid
+   ============================================================ */
+const MAP_W = 1000, MAP_H = 500, SVGNS = "http://www.w3.org/2000/svg";
+function project(lat, lng){
+  return { x:(lng + 180) * (MAP_W/360), y:(90 - lat) * (MAP_H/180) };
+}
+// Stylised continent silhouettes (approximate, recognisable by position + label)
+const CONTINENT_PATHS = [
+  "M105,82 L150,72 L235,70 L300,80 L316,104 L300,121 L280,118 L296,150 L300,160 L285,171 L268,160 L250,170 L235,200 L218,210 L208,194 L221,174 L196,160 L178,150 L165,121 L140,110 L120,96 Z",
+  "M326,55 L362,55 L368,86 L342,96 L324,76 Z",
+  "M300,208 L333,205 L362,222 L400,255 L388,292 L366,322 L350,355 L332,398 L320,392 L313,345 L307,300 L302,255 Z",
+  "M472,150 L545,146 L600,156 L618,178 L648,218 L612,248 L580,300 L558,345 L538,318 L520,262 L505,238 L470,206 L452,198 L460,172 Z",
+  "M475,138 L470,118 L455,108 L482,98 L520,90 L545,100 L566,114 L576,128 L560,140 L538,135 L510,138 L490,142 Z",
+  "M576,128 L600,100 L640,80 L740,72 L840,80 L892,100 L902,122 L875,138 L856,160 L812,200 L800,215 L785,205 L758,200 L740,216 L720,232 L700,212 L678,205 L645,192 L630,205 L615,232 L606,205 L600,178 L592,150 Z",
+  "M825,290 L870,288 L897,283 L925,310 L911,343 L880,352 L840,350 L822,335 L815,305 Z",
+  "M945,345 L957,356 L949,374 L937,360 Z"
+];
+const CONTINENT_LABELS = [
+  {t:"N. AMERICA",lat:48,lng:-100},{t:"S. AMERICA",lat:-15,lng:-60},
+  {t:"EUROPE",lat:55,lng:18},{t:"AFRICA",lat:5,lng:20},
+  {t:"ASIA",lat:50,lng:95},{t:"AUSTRALIA",lat:-25,lng:134}
+];
+
+function buildMap(){
+  const svg = document.createElementNS(SVGNS,"svg");
+  svg.setAttribute("viewBox",`0 0 ${MAP_W} ${MAP_H}`);
+  // grid
+  for(let lng=-150;lng<=150;lng+=30){ const {x}=project(0,lng); svg.appendChild(line(x,0,x,MAP_H,"grid-line")); }
+  for(let lat=-60;lat<=60;lat+=30){ const {y}=project(lat,0); svg.appendChild(line(0,y,MAP_W,y,"grid-line")); }
+  // land
+  CONTINENT_PATHS.forEach(d=>{ const p=document.createElementNS(SVGNS,"path"); p.setAttribute("d",d); p.setAttribute("class","continent"); svg.appendChild(p); });
+  CONTINENT_LABELS.forEach(l=>{ const {x,y}=project(l.lat,l.lng); const t=text(x,y,l.t,"clabel"); svg.appendChild(t); });
+  // layer that we redraw per nut
+  const layer = document.createElementNS(SVGNS,"g"); layer.setAttribute("id","journeyLayer");
+  svg.appendChild(layer);
+  document.getElementById("mapbox").appendChild(svg);
+  return { svg, layer };
+}
+function line(x1,y1,x2,y2,cls){ const l=document.createElementNS(SVGNS,"line"); l.setAttribute("x1",x1);l.setAttribute("y1",y1);l.setAttribute("x2",x2);l.setAttribute("y2",y2); l.setAttribute("class",cls); return l; }
+function text(x,y,str,cls){ const t=document.createElementNS(SVGNS,"text"); t.setAttribute("x",x);t.setAttribute("y",y); t.setAttribute("class",cls); t.textContent=str; return t; }
+
+let animTimers = [];
+function clearAnims(){ animTimers.forEach(id=>cancelAnimationFrame(id)); animTimers=[]; }
+
+function arcPath(a,b){
+  const dx=b.x-a.x, dy=b.y-a.y, dist=Math.hypot(dx,dy)||1;
+  const off = Math.min(dist*0.28, 75);
+  const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
+  // bow the arc "upward" (toward smaller y) using the perpendicular
+  const cx = mx + (dy/dist)*off, cy = my - Math.abs(dx/dist)*off - off*0.3;
+  return `M ${a.x} ${a.y} Q ${cx} ${cy} ${b.x} ${b.y}`;
+}
+
+function drawNut(nut){
+  const layer = document.getElementById("journeyLayer");
+  layer.innerHTML = "";
+  clearAnims();
+  const o = project(nut.origin.lat, nut.origin.lng);
+
+  // paths + travellers, staggered
+  nut.journeys.forEach((j,i)=>{
+    const d = project(j.lat,j.lng);
+    const path = document.createElementNS(SVGNS,"path");
+    path.setAttribute("d", arcPath(o,d));
+    path.setAttribute("class","journey-path");
+    path.setAttribute("stroke", i%2 ? "#2f6f5e" : "#b5512f");
+    path.setAttribute("stroke-dasharray","3 6");
+    path.style.opacity = "0.85";
+    layer.appendChild(path);
+
+    const len = path.getTotalLength();
+    // self-draw using a second solid overlay
+    const solid = path.cloneNode();
+    solid.setAttribute("stroke-dasharray", len);
+    solid.setAttribute("stroke-dashoffset", len);
+    solid.setAttribute("stroke","#7c5a3a");
+    solid.style.opacity = "0.0";
+    layer.appendChild(solid);
+
+    // traveller dot
+    const dot = document.createElementNS(SVGNS,"circle");
+    dot.setAttribute("r","5"); dot.setAttribute("class","traveller");
+    dot.setAttribute("fill", i%2 ? "#2f6f5e" : "#b5512f");
+    dot.style.opacity = "0";
+    layer.appendChild(dot);
+
+    const start = performance.now() + i*650;
+    const dur = 1500;
+    function frame(now){
+      if(now < start){ animTimers.push(requestAnimationFrame(frame)); return; }
+      const t = Math.min((now-start)/dur, 1);
+      solid.style.opacity = "0.55";
+      solid.setAttribute("stroke-dashoffset", len*(1-t));
+      const pt = path.getPointAtLength(len*t);
+      dot.setAttribute("cx",pt.x); dot.setAttribute("cy",pt.y);
+      dot.style.opacity = t>0&&t<1 ? "1":"0";
+      if(t<1){ animTimers.push(requestAnimationFrame(frame)); }
+      else { addPin(layer, d, "dest", j.label); }
+    }
+    animTimers.push(requestAnimationFrame(frame));
+  });
+
+  // origin pin last so it's on top
+  addPin(layer, o, "origin", nut.origin.label, true);
+}
+
+function addPin(layer, p, kind, label, ring){
+  const c = document.createElementNS(SVGNS,"circle");
+  c.setAttribute("cx",p.x); c.setAttribute("cy",p.y); c.setAttribute("r", kind==="origin"?7:5.5);
+  c.setAttribute("class", kind==="origin"?"pin-origin":"pin-dest");
+  layer.appendChild(c);
+  if(ring){
+    const r = document.createElementNS(SVGNS,"circle");
+    r.setAttribute("cx",p.x); r.setAttribute("cy",p.y); r.setAttribute("r","7");
+    r.setAttribute("class","pin-ring"); r.setAttribute("stroke","#b5512f");
+    const an = document.createElementNS(SVGNS,"animate");
+    an.setAttribute("attributeName","r"); an.setAttribute("values","7;16;7");
+    an.setAttribute("dur","2s"); an.setAttribute("repeatCount","indefinite");
+    const an2 = document.createElementNS(SVGNS,"animate");
+    an2.setAttribute("attributeName","opacity"); an2.setAttribute("values","0.9;0;0.9");
+    an2.setAttribute("dur","2s"); an2.setAttribute("repeatCount","indefinite");
+    r.appendChild(an); r.appendChild(an2); layer.appendChild(r);
+  }
+  const lbl = text(p.x+9, p.y+4, label, "pin-label");
+  lbl.setAttribute("fill", kind==="origin"?"#8a3c1f":"#1f4d40");
+  // flip label left if near right edge
+  if(p.x > MAP_W-150){ lbl.setAttribute("x", p.x-9); lbl.setAttribute("text-anchor","end"); }
+  layer.appendChild(lbl);
+}
+
+/* ============================================================
+   RENDER: botany, nut list, story, continents, states
+   ============================================================ */
+function renderBotany(){
+  const box = document.getElementById("botany");
+  Object.values(CATS).forEach(c=>{
+    const ex = NUTS.filter(n=>CATS[n.cat].name===c.name).map(n=>n.name).slice(0,4).join(", ");
+    const div = document.createElement("div");
+    div.className="bcard"; div.style.setProperty("--c", c.color);
+    div.innerHTML = `<div class="ico">${c.name==="True nut"?"🌰":c.name==="Drupe"?"🍑":c.name==="Seed"?"🌱":"🫘"}</div>
+      <div class="cat">${c.name}</div><h4>${ex||"—"}</h4><p>${c.blurb}</p>`;
+    box.appendChild(div);
+  });
+}
+
+let currentNut = NUTS[0];
+function renderNutList(){
+  const list = document.getElementById("nutlist");
+  NUTS.forEach(n=>{
+    const b = document.createElement("button");
+    b.className="nutbtn"; b.dataset.id=n.id;
+    b.innerHTML = `<span class="e">${n.e}</span><span class="n">${n.name}</span>
+      <span class="dot" style="background:${CATS[n.cat].color}"></span>`;
+    b.addEventListener("click",()=>selectNut(n.id));
+    list.appendChild(b);
+  });
+}
+function selectNut(id){
+  currentNut = NUTS.find(n=>n.id===id);
+  document.querySelectorAll(".nutbtn").forEach(b=>b.classList.toggle("active", b.dataset.id===id));
+  renderStory(currentNut);
+  drawNut(currentNut);
+}
+function renderStory(n){
+  const cat = CATS[n.cat];
+  const prod = n.producers.map((p,i)=>`<span class="pchip"><span class="rank">#${i+1}</span><span class="fl">${p.flag}</span>${p.c}${p.note?` <span class="rank">· ${p.note}</span>`:""}</span>`).join("");
+  document.getElementById("story").innerHTML = `
+    <div class="top">
+      <span class="big">${n.e}</span>
+      <h3>${n.name}</h3>
+      <span class="badge" style="background:${cat.color}">${cat.name}</span>
+    </div>
+    <p>${n.story}</p>
+    <div class="wow">💡 <strong>Wow:</strong> ${n.wow}</div>
+    <div class="producers">${prod}</div>`;
+}
+
+function renderContinents(){
+  const box = document.getElementById("continents");
+  CONTINENTS.forEach(c=>{
+    const rows = c.rows.map(r=>`<li>${r[0]}<span class="fl">${r[1]}</span></li>`).join("");
+    const div = document.createElement("div");
+    div.className="ccard";
+    div.innerHTML = `<h3>${c.emoji} ${c.name}</h3><div class="sig">${c.sig}</div><ol>${rows}</ol>`;
+    box.appendChild(div);
+  });
+  document.getElementById("statesbody").innerHTML =
+    STATES.map(s=>`<tr><td><strong>${s[0]}</strong></td><td>${s[1]}</td><td>${s[2]}</td></tr>`).join("");
+}
+
+/* ============================================================
+   ATLAS — sorted bars with animated widths
+   ============================================================ */
+function renderAtlas(){
+  const showImp = document.getElementById("impostToggle").checked;
+  const data = NUTS
+    .filter(n=> showImp ? true : !(n.id==="peanut"||n.id==="coconut"))
+    .slice().sort((a,b)=>b.volume-a.volume);
+  const max = Math.max(...data.map(n=>n.volume));
+  const fmt = v => v>=1e6 ? (v/1e6).toFixed(1)+"M t" : (v/1e3).toFixed(0)+"k t";
+  const box = document.getElementById("bars");
+  box.innerHTML = data.map(n=>{
+    const imp = (n.id==="peanut"||n.id==="coconut");
+    const color = imp ? "#3f6f99" : CATS[n.cat].color;
+    const pct = Math.max((n.volume/max)*100, 3);
+    const top = n.producers[0];
+    return `<div class="bar ${imp?'imposter':''}">
+      <div class="blabel"><span class="e">${n.e}</span><span>${n.name}${imp?'<span class="note">(not a nut!)</span>':''}</span></div>
+      <div class="track"><div class="fill" data-w="${pct}" style="background:${color}">
+        <span class="fl">${top.flag}</span><span class="v">${fmt(n.volume)}</span></div></div>
+    </div>`;
+  }).join("");
+}
+function animateBars(){
+  document.querySelectorAll("#bars .fill").forEach(f=>{ requestAnimationFrame(()=>{ f.style.width=f.dataset.w+"%"; }); });
+}
+
+/* ============================================================
+   QUIZ
+   ============================================================ */
+// distinct countries/places featured (for the counting question)
+const featuredCountries = new Set();
+NUTS.forEach(n=>{ n.producers.forEach(p=>featuredCountries.add(p.c)); });
+const COUNTRY_COUNT = featuredCountries.size;
+
+const QUIZ = [
+  { type:"flag", flag:"🇹🇷",
+    q:"This country grows about two-thirds of the world's supply of one nut. Which?",
+    opts:["Hazelnut","Almond","Cashew","Macadamia"], answer:0,
+    why:"Turkey's humid Black Sea coast grows ~65% of the world's hazelnuts." },
+  { type:"flag", flag:"🇧🇴",
+    q:"This landlocked country is the top exporter of which wild-harvested nut?",
+    opts:["Pistachio","Brazil nut","Pecan","Pine nut"], answer:1,
+    why:"Bolivia leads Brazil-nut exports — they're gathered wild from the Amazon, not farmed." },
+  { type:"flag", flag:"🇦🇺",
+    q:"This continent-country is the native home of which nut?",
+    opts:["Cashew","Walnut","Macadamia","Chestnut"], answer:2,
+    why:"The macadamia is the only major food crop native to Australia." },
+  { type:"count",
+    q:`How many distinct producer countries were featured across this whole lesson?`,
+    opts:["About 6","About 10","About "+COUNTRY_COUNT,"About 25"], answer:2,
+    why:`We named ${COUNTRY_COUNT} different producing countries — from the USA and China to Ivory Coast and Bolivia.` },
+  { type:"imposter",
+    q:"Spot the IMPOSTER — which of these is NOT botanically a nut at all?",
+    opts:["Hazelnut","Chestnut","Peanut","(both A and B are true nuts)"], answer:2,
+    why:"The peanut is a legume (a bean) that ripens underground. Hazelnut and chestnut are the real 'true nuts.'" },
+  { type:"flag", flag:"🇨🇮",
+    q:"Ivory Coast is the world's #1 grower of the raw form of which nut?",
+    opts:["Cashew","Almond","Pecan","Walnut"], answer:0,
+    why:"Ivory Coast grows the most raw cashews; India and Vietnam do most of the shelling." },
+  { type:"flag", flag:"🇺🇸",
+    q:"One US state grows ~80% of the planet's almonds. The country shown leads almonds thanks to which state?",
+    opts:["Florida","California","Oregon","Texas"], answer:1,
+    why:"California's Central Valley alone grows roughly 80% of all the world's almonds." }
+];
+
+let qIndex = 0, qScore = 0, qAnswered = false;
+function renderQuiz(){
+  qIndex=0; qScore=0; qAnswered=false;
+  showQuestion();
+}
+function showQuestion(){
+  qAnswered=false;
+  const box = document.getElementById("quizbox");
+  const item = QUIZ[qIndex];
+  const flag = item.flag ? `<div class="qflag">${item.flag}</div>` : "";
+  const opts = item.opts.map((o,i)=>`<button class="qopt" data-i="${i}">${o}<span class="mk"></span></button>`).join("");
+  box.innerHTML = `
+    <div class="qprog">Question ${qIndex+1} / ${QUIZ.length} &nbsp;·&nbsp; Score: ${qScore}</div>
+    <div class="qcard">
+      <h3>${item.q}</h3>
+      ${flag}
+      <div class="qopts">${opts}</div>
+      <div class="qfeed" id="qfeed"></div>
+      <button class="qnext" id="qnext" disabled>${qIndex===QUIZ.length-1?"See results →":"Next question →"}</button>
+    </div>`;
+  box.querySelectorAll(".qopt").forEach(b=>b.addEventListener("click",()=>answer(+b.dataset.i)));
+  document.getElementById("qnext").addEventListener("click", nextQuestion);
+}
+function answer(i){
+  if(qAnswered) return;
+  qAnswered = true;
+  const item = QUIZ[qIndex];
+  const opts = document.querySelectorAll(".qopt");
+  opts.forEach((b,idx)=>{
+    b.disabled = true;
+    if(idx===item.answer){ b.classList.add("correct"); b.querySelector(".mk").textContent="✓"; }
+    if(idx===i && i!==item.answer){ b.classList.add("wrong"); b.querySelector(".mk").textContent="✗"; }
+  });
+  const right = i===item.answer;
+  if(right) qScore++;
+  document.getElementById("qfeed").innerHTML =
+    `${right?"✅ <strong>Correct!</strong>":"❌ <strong>Not quite.</strong>"} ${item.why}`;
+  document.getElementById("qnext").disabled = false;
+}
+function nextQuestion(){
+  if(qIndex < QUIZ.length-1){ qIndex++; showQuestion(); }
+  else showResults();
+}
+function showResults(){
+  const tier = quizTier(qScore, QUIZ.length);
+  document.getElementById("quizbox").innerHTML = `
+    <div class="qresult">
+      <div class="score">${qScore}/${QUIZ.length}</div>
+      <div class="tier">${tier.title}</div>
+      <p>${tier.msg}</p>
+      <button class="qnext" id="qretry">↻ Try again</button>
+    </div>`;
+  document.getElementById("qretry").addEventListener("click", renderQuiz);
+}
+
+/* --- Quiz feedback tiers ---
+   This decides the celebratory (or consoling) message shown at the end.
+   Tweak the thresholds and copy to set the tone you want. */
+function quizTier(score, total){
+  const pct = score/total;
+  if(pct === 1)    return { title:"🏆 Certified Nut Nerd", msg:"A perfect score. You know your drupes from your legumes." };
+  if(pct >= 0.7)   return { title:"🌰 Seasoned Forager", msg:"Strong work — you cracked most of them open." };
+  if(pct >= 0.4)   return { title:"🐿️ Curious Squirrel", msg:"A solid start. Scroll back up and the answers are all hiding in plain sight." };
+  return { title:"🥥 Tough Shell to Crack", msg:"No worries — even coconuts take a few tries. Give it another go!" };
+}
+
+/* ============================================================
+   INIT + scroll behaviours
+   ============================================================ */
+buildMap();
+renderBotany();
+renderNutList();
+renderContinents();
+renderAtlas();
+selectNut(NUTS[0].id);
+
+document.getElementById("replay").addEventListener("click", ()=>drawNut(currentNut));
+document.getElementById("impostToggle").addEventListener("change", ()=>{ renderAtlas(); animateBars(); });
+
+// progress bar + active nav link
+const navLinks = [...document.querySelectorAll("nav .links a")];
+const sections = navLinks.map(a=>document.querySelector(a.getAttribute("href")));
+window.addEventListener("scroll", ()=>{
+  const h = document.documentElement;
+  const pct = h.scrollTop/(h.scrollHeight-h.clientHeight)*100;
+  document.getElementById("progress").style.width = pct+"%";
+  let active = 0;
+  sections.forEach((s,i)=>{ if(s && s.getBoundingClientRect().top < 140) active=i; });
+  navLinks.forEach((a,i)=>a.classList.toggle("active", i===active));
+});
+
+// lazy-trigger animations when sections scroll into view
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    if(e.target.id==="atlas"){ animateBars(); }
+    if(e.target.id==="quiz" && !document.getElementById("qfeed") && !document.querySelector(".qresult")){ renderQuiz(); }
+    if(e.target.id==="explore"){ drawNut(currentNut); }
+  });
+},{ threshold:0.25 });
+["atlas","explore"].forEach(id=>io.observe(document.getElementById(id)));
+renderQuiz();
+</script>
+</body>
+</html>
