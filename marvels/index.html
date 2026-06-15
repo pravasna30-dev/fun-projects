@@ -65,6 +65,18 @@
   .magline{stroke:var(--indigo);stroke-width:.8;fill:none;opacity:.4;stroke-dasharray:1 5;animation:flow 4s linear infinite;}
   @keyframes flow{to{stroke-dashoffset:-60;}}
   .leylabel{font-size:6px;fill:var(--indigo);font-family:"SF Mono",monospace;}
+  .ley-hit{stroke:transparent;stroke-width:9;fill:none;cursor:help;pointer-events:stroke;}
+
+  /* ley-line legend (shown only while the toggle is on) */
+  .leylegend{position:absolute;left:14px;bottom:14px;z-index:6;max-width:268px;background:rgba(255,250,240,.96);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:0 4px 16px rgba(80,50,20,.14);font-size:.8rem;}
+  .leylegend h5{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--indigo);margin-bottom:6px;}
+  .leylegend p{color:#5d5238;margin:0 0 8px;line-height:1.45;}
+  .leylegend .keyrow{display:flex;align-items:center;gap:8px;margin:4px 0;color:#463c2e;}
+  .leylegend .sw{width:26px;height:0;flex-shrink:0;border-top-width:2px;}
+  .leylegend .sw.mer{border-top:2px dashed var(--indigo);}
+  .leylegend .sw.lnk{border-top:2px dashed var(--maroon);}
+  .leylegend .sw.mag{border-top:2px dotted var(--indigo);opacity:.6;}
+  .leylegend .disc{font-style:italic;color:var(--muted);font-size:.74rem;margin-top:8px;margin-bottom:0;}
 
   .gop{cursor:pointer;}
   .gop .hit{fill:transparent;}
@@ -147,6 +159,14 @@
     <label class="toggle" id="leyToggle" title="Show the claimed temple alignment & geomagnetic flow" style="display:none">
       <input type="checkbox" id="leyChk"> Ley lines
     </label>
+    <div class="leylegend" id="leyLegend" style="display:none">
+      <h5>What is a ley line?</h5>
+      <p>A <b>ley line</b> is a straight line drawn between sacred or ancient sites. Believers hold that such alignments mark currents of earth-energy; here three of the five element-temples fall on almost the same meridian.</p>
+      <div class="keyrow"><span class="sw mer"></span> Meridian · <span class="mono">~79°41′E</span></div>
+      <div class="keyrow"><span class="sw lnk"></span> Temple alignment (Earth·Air·Space)</div>
+      <div class="keyrow"><span class="sw mag"></span> Stylised geomagnetic flow</div>
+      <p class="disc">Hover the dashed line for its longitude. The alignment is cultural lore and a striking coincidence of geography — not established geophysics.</p>
+    </div>
     <div id="mapbox"></div>
   </div>
 
@@ -752,6 +772,22 @@ const gLey=document.createElementNS(SVGNS,"g"); gLey.style.display="none";
   let dd="";
   LEY_IDS.map(id=>PLACES.find(t=>t.id===id)).forEach((t,i)=>{ const p=project(t.lat,t.lng); dd+=(i?"L":"M")+p.x.toFixed(1)+" "+p.y.toFixed(1); });
   const link=document.createElementNS(SVGNS,"path"); link.setAttribute("d",dd); link.setAttribute("class","ley-link"); gLey.appendChild(link);
+  // invisible wide hit-line over the meridian → hovering reveals the longitude
+  const decDeg = LEY_LNG.toFixed(3), dmsDeg = Math.floor(LEY_LNG), dmsMin = Math.round((LEY_LNG-dmsDeg)*60);
+  const meridTip = `<b>Ley meridian</b> · ${decDeg}°E (${dmsDeg}°${dmsMin}′E)<br><span style="opacity:.8;font-size:.72rem">Earth, Air &amp; Space temples align here</span>`;
+  const hit=document.createElementNS(SVGNS,"line");
+  hit.setAttribute("x1",a.x);hit.setAttribute("y1",a.y);hit.setAttribute("x2",b.x);hit.setAttribute("y2",b.y);
+  hit.setAttribute("class","ley-hit");
+  hit.addEventListener("mouseenter",e=>showTip(e,meridTip));
+  hit.addEventListener("mousemove",moveTip);
+  hit.addEventListener("mouseleave",hideTip);
+  gLey.appendChild(hit);
+  // the temple-alignment line is hoverable too
+  const linkHit=document.createElementNS(SVGNS,"path"); linkHit.setAttribute("d",dd); linkHit.setAttribute("class","ley-hit");
+  linkHit.addEventListener("mouseenter",e=>showTip(e,`<b>Temple alignment</b><br><span style="opacity:.8;font-size:.72rem">Ekambareswarar → Srikalahasti → Thillai Nataraja</span>`));
+  linkHit.addEventListener("mousemove",moveTip);
+  linkHit.addEventListener("mouseleave",hideTip);
+  gLey.appendChild(linkHit);
   // stylised geomagnetic flow lines (approximate, decorative)
   for(let k=0;k<5;k++){ const lng0=77.5+k*1.1; const dpath=[];
     for(let lat=15.4;lat>=9.6;lat-=0.6){ const p=project(lat,lng0+Math.sin((lat)/2)*0.25); dpath.push((dpath.length?"L":"M")+p.x.toFixed(1)+" "+p.y.toFixed(1)); }
@@ -822,7 +858,8 @@ function zoomToBox(b,padFrac){
    INTERACTION
    ============================================================ */
 let zoomed=false, curState=null, curCat=null;
-const leyToggle=document.getElementById("leyToggle"), leyChk=document.getElementById("leyChk");
+const leyToggle=document.getElementById("leyToggle"), leyChk=document.getElementById("leyChk"), leyLegend=document.getElementById("leyLegend");
+function hideLey(){ leyChk.checked=false; gLey.style.display="none"; leyLegend.style.display="none"; }
 
 function stateZoomBox(name){
   if(name==="Tamil Nadu"){
@@ -843,7 +880,7 @@ function selectState(name){
     setCategory(STATE_CATS[name][0]);
   } else {
     curState=null; curCat=null; gMarks.style.display="none";
-    leyToggle.style.display="none"; leyChk.checked=false; gLey.style.display="none";
+    leyToggle.style.display="none"; hideLey();
     animateVB(stateZoomBox(name));
     renderSoon(name);
   }
@@ -853,7 +890,7 @@ function setCategory(cat){
   renderMarkers(curState,cat);
   const showLey = (curState==="Tamil Nadu" && cat==="shiva");
   leyToggle.style.display = showLey?"flex":"none";
-  if(!showLey){ leyChk.checked=false; gLey.style.display="none"; }
+  if(!showLey) hideLey();
   renderState();
 }
 function backToIndia(){
@@ -866,7 +903,7 @@ function backToIndia(){
   renderIntro();
 }
 document.getElementById("backBtn").addEventListener("click",backToIndia);
-leyChk.addEventListener("change",e=>{ gLey.style.display=e.target.checked?"block":"none"; });
+leyChk.addEventListener("change",e=>{ const on=e.target.checked; gLey.style.display=on?"block":"none"; leyLegend.style.display=on?"block":"none"; });
 
 /* ---- tooltip ---- */
 const tip=document.getElementById("tip");
