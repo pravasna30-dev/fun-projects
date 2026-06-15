@@ -104,9 +104,12 @@
   .tlist{list-style:none;display:flex;flex-direction:column;gap:2px;margin:10px 0 4px;}
   .titem{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:10px;cursor:pointer;border:1px solid transparent;transition:background .12s,border-color .12s;}
   .titem:hover{background:#f6edda;border-color:var(--line);}
-  .titem .tg{font-size:1.05rem;line-height:1.1;flex-shrink:0;}
+  .titem .tg{font-size:1.05rem;line-height:1.1;flex-shrink:0;width:22px;text-align:center;}
   .titem .tn{font-weight:700;font-size:.95rem;}
   .titem .tc{color:var(--muted);font-size:.8rem;}
+  .elem-ic{display:inline-block;vertical-align:-3px;}
+  .elemrow{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 0 2px;padding:10px 12px;background:#f6edda;border:1px solid var(--line);border-radius:12px;}
+  .elemchip{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:700;color:#5d5238;}
 
   footer{border-top:1px solid var(--line);padding:30px 22px 60px;max-width:1240px;margin:0 auto;color:var(--muted);font-size:.86rem;}
   footer a{color:var(--maroon);font-weight:700;text-decoration:none;}
@@ -680,6 +683,27 @@ function gopuramSVG(color){
   </g>`;
 }
 
+/* ---- Pancha Bhoota element emblems (little drawn icons for each element) ---- */
+const ELEM_COLORS = {earth:"#8a6d3b", water:"#2f78a8", fire:"#c0392b", air:"#5a8a6b", space:"#5b4b8a"};
+function elemKey(t){ return t && t.element ? t.element.split(" ")[0].toLowerCase() : null; }
+function elementIcon(key,size){
+  size=size||16;
+  const c=ELEM_COLORS[key]||"#888", l=shade(c,.45), d=shade(c,-.25);
+  const art={
+    // Earth — a soil globe with ground strata
+    earth:`<circle cx="12" cy="12" r="9" fill="${c}"/><path d="M3.5 10c2.2 1.1 3.4-1 5.5 0s3.4 1 5.5 0 3.2 1 5.6-.1" fill="none" stroke="${l}" stroke-width="1.5" stroke-linecap="round"/><path d="M3.4 14c2.4 1.2 4-1 6 0s4 1.1 7-.6" fill="none" stroke="${l}" stroke-width="1.5" stroke-linecap="round"/>`,
+    // Water — a droplet
+    water:`<path d="M12 2.5C12 2.5 4.5 11 4.5 15.5a7.5 7.5 0 0 0 15 0C19.5 11 12 2.5 12 2.5Z" fill="${c}"/><path d="M9 15.5a3 3 0 0 0 2.2 3.2" fill="none" stroke="${l}" stroke-width="1.4" stroke-linecap="round"/>`,
+    // Fire — a flame
+    fire:`<path d="M12 1.8c1.7 3.8 5.3 5.8 3.6 10.6A4.8 4.8 0 0 1 6.8 13c0-2.2 1.1-3.3 1.7-4.9C9.5 9.7 10.6 9.4 11.3 8.6 12.4 7.4 11 4.5 12 1.8Z" fill="${c}"/><path d="M12 13c1.7 0 2.6 1.3 2.1 2.8A2.4 2.4 0 0 1 9.7 15c0-1.1.7-1.8 1.1-2.5.3.7.8 1 1.2.5Z" fill="${l}"/>`,
+    // Air / wind — moving swirls
+    air:`<g fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round"><path d="M3 8h9.5a2.6 2.6 0 1 0-2.5-3.3"/><path d="M3 12.2h13.5a2.7 2.7 0 1 1-2.6 3.4"/><path d="M3 16.3h7.5"/></g>`,
+    // Space / ether — a star in the void
+    space:`<circle cx="12" cy="12" r="9" fill="${c}"/><path d="M12 5.5l1.4 3.1 3.3.4-2.5 2.2.7 3.3L12 14.2 9.1 15.7l.7-3.3-2.5-2.2 3.3-.4Z" fill="${l}"/><circle cx="6.6" cy="15.2" r="1" fill="${l}"/><circle cx="16.8" cy="6.8" r=".8" fill="${l}"/>`
+  };
+  return `<svg class="elem-ic" viewBox="0 0 24 24" width="${size}" height="${size}" aria-label="${key}">${art[key]||""}</svg>`;
+}
+
 /* ============================================================
    PROJECTION + MAP
    ============================================================ */
@@ -888,18 +912,22 @@ function renderState(){
     return `<button class="catpill${on?' on':''}"${on?` style="background:${c.color}"`:''} data-cat="${k}">${c.glyph} ${c.label}</button>`;
   }).join("");
   const items=list.map(t=>{
-    const tag=t.element||t.planet||t.abode||"";
+    const tag=t.element||t.planet||t.abode||"", ek=elemKey(t);
     return `<li class="titem" data-id="${t.id}">
-      <span class="tg">${cat.glyph}</span>
+      <span class="tg">${ek?elementIcon(ek,22):cat.glyph}</span>
       <span><span class="tn">${t.name}</span>${tag?` <span class="tc">· ${tag}</span>`:''}<br><span class="tc">${t.city||t.state}</span></span>
     </li>`;
   }).join("");
-  const leyNote = (curState==="Tamil Nadu"&&curCat==="shiva")
+  const isPancha = (curState==="Tamil Nadu"&&curCat==="shiva");
+  const elemLegend = isPancha
+    ? `<div class="elemrow">${["earth","water","fire","air","space"].map(k=>`<span class="elemchip">${elementIcon(k,18)} ${k[0].toUpperCase()+k.slice(1)}</span>`).join("")}</div>` : "";
+  const leyNote = isPancha
     ? `<div class="note">Toggle <b>Ley lines</b> (top-right of the map) to see the famous ~79°41′E alignment of the Earth, Air and Space element-temples.</div>` : "";
   panel.innerHTML=`
     <div class="eyebrow" style="color:${cat.color}">${curState} · ${cat.sub}</div>
     <h2>${cat.glyph} ${cat.label}</h2>
     <p class="intro" style="margin-top:8px">${cat.blurb}</p>
+    ${elemLegend}
     <div class="cats">${pills}</div>
     <ul class="tlist">${items}</ul>
     ${leyNote}
@@ -910,12 +938,12 @@ function renderState(){
 function openTemple(id){
   const t=PLACES.find(x=>x.id===id), cat=CATEGORIES[t.cat];
   document.querySelectorAll(".gop").forEach(g=>g.style.filter=g.dataset.id===id?`drop-shadow(0 3px 7px ${cat.color})`:"");
-  const tag=t.element||t.planet||t.abode||"";
+  const tag=t.element||t.planet||t.abode||"", ek=elemKey(t);
   panel.innerHTML=`
-    <div class="eyebrow" style="color:${cat.color}">${cat.glyph} ${cat.label}${tag?` · ${tag}`:''}</div>
+    <div class="eyebrow" style="color:${cat.color}">${ek?elementIcon(ek,16)+' ':cat.glyph+' '}${cat.label}${tag?` · ${tag}`:''}</div>
     <h2>${t.name}</h2>
     <div class="sub">${t.city?t.city+', ':''}${t.state}</div>
-    <div class="gop-illus"><svg viewBox="0 0 40 56">${gopuramSVG(cat.color)}</svg></div>
+    <div class="gop-illus" style="gap:18px;align-items:center">${ek?elementIcon(ek,72):''}<svg viewBox="0 0 40 56">${gopuramSVG(cat.color)}</svg></div>
     <div class="meta">
       <div><span class="k">Deity</span><span>${t.deity}</span></div>
       <div><span class="k">Location</span><span>${t.lat.toFixed(3)}°N, ${t.lng.toFixed(3)}°E</span></div>
