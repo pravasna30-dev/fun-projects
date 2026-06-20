@@ -47,3 +47,9 @@ Temporary Items
 # Firmware / ESP32 build artifacts
 *.bin
 build/
+
+# fun-projects build byproducts
+worldcup/ne_50m_raw.geojson
+worldcup/*.png
+worldcup/_check.js
+worldcup/data_blob.json

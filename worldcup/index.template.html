@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The 48 — 2026 FIFA World Cup Atlas</title>
+<style>
+  :root{
+    --navy:#070d1f; --navy2:#0c1730; --panel:#0f1c3a; --panel2:#13234a;
+    --ink:#eaf1ff; --muted:#8fa6cf; --faint:#5a6f99;
+    --land:#1a2a4d; --land-stroke:#0a1530;
+    --blue:#2f7bff; --blue-bright:#56a0ff; --blue-glow:#6db3ff;
+    --gold:#ffcf5c; --debut:#36e0a8;
+    --stroke:#26406f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(1200px 700px at 75% -10%, #16264e 0%, transparent 60%),
+      radial-gradient(900px 600px at 0% 110%, #122a52 0%, transparent 55%),
+      var(--navy);
+    color:var(--ink); overflow:hidden;
+  }
+  .app{display:flex; flex-direction:column; height:100vh;}
+  /* ---- header ---- */
+  header{
+    padding:14px 26px 12px; border-bottom:1px solid var(--stroke);
+    display:flex; align-items:center; gap:26px; flex-wrap:wrap;
+    background:linear-gradient(180deg,rgba(12,23,48,.9),rgba(7,13,31,.6));
+    backdrop-filter:blur(6px);
+  }
+  .brand{display:flex; flex-direction:column; gap:2px}
+  .kicker{font-size:11px; letter-spacing:.42em; text-transform:uppercase; color:var(--blue-bright); font-weight:700}
+  h1{font-size:30px; font-weight:800; letter-spacing:-.01em; line-height:1;
+     background:linear-gradient(92deg,#fff 10%,var(--blue-glow) 90%);
+     -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;}
+  h1 .yr{-webkit-text-fill-color:var(--gold); background:none}
+  .sub{color:var(--muted); font-size:13px; margin-top:3px}
+  .stats{display:flex; gap:22px; margin-left:auto; flex-wrap:wrap}
+  .stat{text-align:center; min-width:62px}
+  .stat b{display:block; font-size:24px; font-weight:800; color:#fff; line-height:1}
+  .stat span{font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint)}
+  .stat.gold b{color:var(--gold)} .stat.debut b{color:var(--debut)}
+  /* ---- body split ---- */
+  .body{display:flex; flex:1; min-height:0}
+  .mapwrap{position:relative; flex:1; min-width:0; overflow:hidden;
+           cursor:grab; background:
+             radial-gradient(1100px 700px at 50% 40%, #0b1530 0, transparent 70%);}
+  .mapwrap.drag{cursor:grabbing}
+  svg{position:absolute; inset:0; width:100%; height:100%; display:block}
+  .country{fill:var(--land); stroke:#0a1530; stroke-width:.06; transition:fill .15s}
+  .country.hi{fill:url(#hiGrad); stroke:#0a1530; stroke-width:.06}
+  .country.active{fill:var(--gold)!important}
+  /* pins overlay */
+  .pins{position:absolute; inset:0; pointer-events:none}
+  .pin{position:absolute; transform:translate(-50%,-50%); pointer-events:auto; cursor:pointer;
+       will-change:left,top; z-index:1}
+  .pin .flagchip{
+    width:26px; height:18px; border-radius:3px; overflow:hidden;
+    border:1.5px solid rgba(255,255,255,.85); box-shadow:0 2px 6px rgba(0,0,0,.55);
+    background:#0c1730; transition:transform .12s, box-shadow .12s;
+  }
+  .pin .flagchip img{width:100%; height:100%; object-fit:cover; display:block}
+  .pin .num{
+    position:absolute; top:-7px; right:-8px; min-width:15px; height:15px; padding:0 3px;
+    border-radius:8px; background:var(--blue); color:#fff; font-size:9.5px; font-weight:800;
+    line-height:15px; text-align:center; border:1.5px solid var(--navy); box-shadow:0 1px 3px rgba(0,0,0,.5)}
+  .pin.debut .num{background:var(--debut); color:#04231a}
+  .pin.host .flagchip{border-color:var(--gold)}
+  .pin:hover{z-index:50}
+  .pin:hover .flagchip, .pin.sel .flagchip{transform:scale(1.55); box-shadow:0 4px 14px rgba(45,123,255,.7)}
+  .pin .lbl{
+    position:absolute; left:50%; top:-26px; transform:translateX(-50%);
+    white-space:nowrap; background:#04122b; border:1px solid var(--stroke);
+    padding:3px 8px; border-radius:6px; font-size:11px; font-weight:600; color:#fff;
+    opacity:0; pointer-events:none; transition:opacity .12s; box-shadow:0 4px 14px rgba(0,0,0,.5)}
+  .pin:hover .lbl, .pin.sel .lbl{opacity:1}
+  .pin .lbl small{color:var(--blue-glow); font-weight:700}
+  /* map controls + legend */
+  .ctrl{position:absolute; right:14px; bottom:14px; display:flex; flex-direction:column; gap:6px; z-index:20}
+  .ctrl button{width:34px; height:34px; border-radius:9px; border:1px solid var(--stroke);
+    background:rgba(12,23,48,.85); color:#fff; font-size:17px; font-weight:700; cursor:pointer;
+    backdrop-filter:blur(4px); transition:background .12s}
+  .ctrl button:hover{background:var(--blue)}
+  .legend{position:absolute; left:14px; bottom:14px; z-index:20;
+    background:rgba(7,16,36,.82); border:1px solid var(--stroke); border-radius:11px;
+    padding:11px 14px; font-size:11.5px; color:var(--muted); backdrop-filter:blur(6px); max-width:230px}
+  .legend .row{display:flex; align-items:center; gap:8px; margin:4px 0}
+  .legend .sw{width:14px; height:14px; border-radius:4px; flex:none}
+  .legend b{color:#fff; font-weight:700}
+  /* ---- roster panel ---- */
+  .panel{width:340px; flex:none; background:linear-gradient(180deg,var(--panel),var(--navy2));
+    border-left:1px solid var(--stroke); display:flex; flex-direction:column}
+  .search{padding:12px 14px; border-bottom:1px solid var(--stroke)}
+  .search input{width:100%; padding:9px 12px; border-radius:9px; border:1px solid var(--stroke);
+    background:#091327; color:#fff; font-size:13px; outline:none}
+  .search input::placeholder{color:var(--faint)}
+  .search input:focus{border-color:var(--blue)}
+  .roster{flex:1; overflow-y:auto; padding:6px 8px 30px}
+  .roster::-webkit-scrollbar{width:9px}
+  .roster::-webkit-scrollbar-thumb{background:#22386a; border-radius:8px}
+  .grp{font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--blue-bright);
+    font-weight:700; padding:14px 10px 5px; display:flex; justify-content:space-between}
+  .grp span{color:var(--faint); font-weight:600; letter-spacing:.05em}
+  .team{display:flex; align-items:center; gap:11px; padding:7px 10px; border-radius:9px; cursor:pointer;
+    transition:background .1s}
+  .team:hover, .team.sel{background:var(--panel2)}
+  .team.sel{box-shadow:inset 2px 0 0 var(--blue-bright)}
+  .team .fl{width:30px; height:21px; border-radius:3px; overflow:hidden; flex:none;
+    border:1px solid rgba(255,255,255,.25); box-shadow:0 1px 3px rgba(0,0,0,.5)}
+  .team .fl img{width:100%; height:100%; object-fit:cover; display:block}
+  .team .nm{flex:1; min-width:0}
+  .team .nm b{display:block; font-size:13.5px; font-weight:650; color:#fff; white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis}
+  .team .nm small{font-size:11px; color:var(--muted)}
+  .tag{font-size:9px; font-weight:800; letter-spacing:.04em; padding:2px 6px; border-radius:20px;
+    text-transform:uppercase}
+  .tag.host{background:rgba(255,207,92,.16); color:var(--gold)}
+  .tag.debut{background:rgba(54,224,168,.16); color:var(--debut)}
+  .team .ord{text-align:right; flex:none}
+  .team .ord b{font-size:16px; font-weight:800; color:var(--blue-glow); line-height:1}
+  .team .ord small{display:block; font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint)}
+  .team.debut .ord b{color:var(--debut)}
+  footer{padding:9px 26px; border-top:1px solid var(--stroke); font-size:11px; color:var(--faint);
+    display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap}
+  footer a{color:var(--blue-bright); text-decoration:none}
+  @media(max-width:860px){
+    .panel{width:280px} h1{font-size:22px} .stats{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="kicker">FIFA World Cup · Canada · México · USA</div>
+      <h1>The 48 <span class="yr">·2026·</span></h1>
+      <div class="sub">Every nation in the first 48-team World Cup — and how many times each has been here before.</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>48</b><span>Nations</span></div>
+      <div class="stat gold"><b>3</b><span>Hosts</span></div>
+      <div class="stat debut"><b>4</b><span>Debutants</span></div>
+      <div class="stat"><b>6</b><span>Confeds</span></div>
+      <div class="stat"><b>104</b><span>Matches</span></div>
+    </div>
+  </header>
+
+  <div class="body">
+    <div class="mapwrap" id="mapwrap">
+      <svg id="map" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="hiGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#3f8bff"/>
+            <stop offset="1" stop-color="#1f5fd0"/>
+          </linearGradient>
+        </defs>
+        <g id="countries"></g>
+      </svg>
+      <div class="pins" id="pins"></div>
+      <div class="legend">
+        <div class="row"><span class="sw" style="background:linear-gradient(180deg,#3f8bff,#1f5fd0)"></span><span><b>Qualified</b> for 2026</span></div>
+        <div class="row"><span class="sw" style="background:#1a2a4d;border:1px solid #2a4170"></span><span>Not competing</span></div>
+        <div class="row"><span class="sw" style="background:var(--debut)"></span><span><b>Green badge</b> = World Cup debut</span></div>
+        <div class="row"><span class="sw" style="background:var(--blue);border-radius:50%"></span><span>Badge number = <b>nth</b> appearance</span></div>
+      </div>
+      <div class="ctrl">
+        <button id="zin" title="Zoom in">+</button>
+        <button id="zout" title="Zoom out">−</button>
+        <button id="zreset" title="Reset view" style="font-size:13px">⤢</button>
+      </div>
+    </div>
+
+    <aside class="panel">
+      <div class="search"><input id="q" type="text" placeholder="Search a country…" autocomplete="off"></div>
+      <div class="roster" id="roster"></div>
+    </aside>
+  </div>
+
+  <footer>
+    <div>The 48-team field for the 23rd FIFA World Cup (11 Jun – 19 Jul 2026). Appearance counts <b>include</b> 2026.</div>
+    <div>Data verified vs. Wikipedia all-time WC table (updated 20 Jun 2026) · Flags: flagcdn.com · Map: Natural Earth · <a href="../index.html">← Fun Projects</a></div>
+  </footer>
+</div>
+
+<script>
+const DATA = /*__DATA__*/;
+const FEATS = DATA.feats, TEAMS = DATA.teams;
+const CONF_ORDER = ["UEFA","CAF","AFC","CONMEBOL","CONCACAF","OFC"];
+const CONF_NAME = {UEFA:"Europe · UEFA",CAF:"Africa · CAF",AFC:"Asia · AFC",
+  CONMEBOL:"South America · CONMEBOL",CONCACAF:"N/C America · CONCACAF",OFC:"Oceania · OFC"};
+
+// ---- projection: equirectangular, x=lng, y=-lat ----
+const proj = (lng,lat)=>[lng, -lat];
+// world frame (crop Antarctica + far Arctic for nicer framing)
+const FRAME = {x:-168, y:-82, w:355, h:140}; // minX,minY(=-maxLat),width,height
+let vb = {...FRAME};
+
+const svg = document.getElementById('map');
+const gC = document.getElementById('countries');
+const pinsEl = document.getElementById('pins');
+const mapwrap = document.getElementById('mapwrap');
+
+function ordinal(n){
+  const s=["th","st","nd","rd"], v=n%100;
+  return n + (s[(v-20)%10] || s[v] || s[0]);
+}
+
+// ---- draw countries ----
+function pathFor(coords){
+  // coords = array of polygons; each polygon = array of rings; ring = [[lng,lat],...]
+  let d="";
+  for(const poly of coords){
+    for(const ring of poly){
+      ring.forEach((pt,i)=>{ const [x,y]=proj(pt[0],pt[1]); d += (i?'L':'M')+x.toFixed(2)+' '+y.toFixed(2); });
+      d+="Z";
+    }
+  }
+  return d;
+}
+const teamByIso = {};
+TEAMS.forEach(t=>{ (teamByIso[t.iso3]=teamByIso[t.iso3]||[]).push(t); });
+FEATS.sort((a,b)=>a.h-b.h); // draw highlighted last (on top)
+for(const f of FEATS){
+  const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d', pathFor(f.c));
+  p.setAttribute('class','country'+(f.h?' hi':''));
+  if(f.h){ p.dataset.iso=f.i; }
+  gC.appendChild(p);
+}
+
+// ---- build pins ----
+const pinEls = {};
+TEAMS.forEach((t,idx)=>{
+  const el=document.createElement('div');
+  el.className='pin'+(t.debut?' debut':'')+(t.host?' host':'');
+  el.innerHTML=`<div class="flagchip"><img loading="lazy" src="https://flagcdn.com/${t.iso2}.svg" alt="${t.name}"></div>
+    <div class="num">${t.app}</div>
+    <div class="lbl">${t.name} · <small>${ordinal(t.app)}</small></div>`;
+  el.addEventListener('mouseenter',()=>select(idx,false));
+  el.addEventListener('click',()=>{ select(idx,true); flyTo(t); });
+  pinsEl.appendChild(el);
+  pinEls[idx]=el;
+});
+
+// ---- build roster ----
+const roster=document.getElementById('roster');
+const rowEls={};
+CONF_ORDER.forEach(conf=>{
+  const list=TEAMS.map((t,i)=>({t,i})).filter(o=>o.t.conf===conf)
+    .sort((a,b)=>a.t.name.localeCompare(b.t.name));
+  const g=document.createElement('div'); g.className='grp';
+  g.innerHTML=`<span style="color:var(--blue-bright)">${CONF_NAME[conf]}</span><span>${list.length}</span>`;
+  roster.appendChild(g);
+  list.forEach(({t,i})=>{
+    const r=document.createElement('div');
+    r.className='team'+(t.debut?' debut':'');
+    const tag = t.host?`<span class="tag host">Host</span>`:(t.debut?`<span class="tag debut">Debut</span>`:'');
+    r.innerHTML=`<div class="fl"><img loading="lazy" src="https://flagcdn.com/${t.iso2}.svg" alt=""></div>
+      <div class="nm"><b>${t.name} ${tag}</b><small>${ordinal(t.app)} World Cup</small></div>
+      <div class="ord"><b>${t.app}</b><small>${t.debut?'first':ordinal(t.app).replace(/\d+/,'')+' time'}</small></div>`;
+    r.addEventListener('mouseenter',()=>select(i,false));
+    r.addEventListener('click',()=>{ select(i,true); flyTo(t); });
+    roster.appendChild(r);
+    rowEls[i]=r;
+  });
+});
+
+// ---- selection sync ----
+let selIdx=-1;
+function select(idx, scroll){
+  if(selIdx===idx) return;
+  if(selIdx>=0){ pinEls[selIdx].classList.remove('sel'); rowEls[selIdx].classList.remove('sel'); }
+  // clear active country
+  gC.querySelectorAll('.country.active').forEach(c=>c.classList.remove('active'));
+  selIdx=idx;
+  if(idx<0) return;
+  pinEls[idx].classList.add('sel'); rowEls[idx].classList.add('sel');
+  const iso=TEAMS[idx].iso3;
+  gC.querySelectorAll(`.country[data-iso="${iso}"]`).forEach(c=>c.classList.add('active'));
+  if(scroll) rowEls[idx].scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+
+// ---- viewBox + pin positioning ----
+function applyVB(){ svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`); positionPins(); }
+function positionPins(){
+  const W=mapwrap.clientWidth, H=mapwrap.clientHeight;
+  const scale=Math.min(W/vb.w, H/vb.h);
+  const offX=(W-vb.w*scale)/2, offY=(H-vb.h*scale)/2;
+  TEAMS.forEach((t,idx)=>{
+    const [sx,sy]=proj(t.pin[0],t.pin[1]);
+    const px=offX+(sx-vb.x)*scale, py=offY+(sy-vb.y)*scale;
+    const el=pinEls[idx];
+    const vis = px>-20 && px<W+20 && py>-20 && py<H+20;
+    el.style.display = vis?'block':'none';
+    el.style.left=px+'px'; el.style.top=py+'px';
+  });
+}
+
+// ---- zoom / pan ----
+function zoomAt(factor, cx, cy){
+  const W=mapwrap.clientWidth, H=mapwrap.clientHeight;
+  const scale=Math.min(W/vb.w, H/vb.h);
+  const offX=(W-vb.w*scale)/2, offY=(H-vb.h*scale)/2;
+  // map pixel -> svg coord
+  const sx=(cx-offX)/scale+vb.x, sy=(cy-offY)/scale+vb.y;
+  let nw=vb.w*factor, nh=vb.h*factor;
+  // clamp zoom
+  const minW=FRAME.w*0.06, maxW=FRAME.w;
+  if(nw<minW){const k=minW/vb.w; nw=vb.w*k; nh=vb.h*k;}
+  if(nw>maxW){const k=maxW/vb.w; nw=vb.w*k; nh=vb.h*k;}
+  vb.x = sx - (sx-vb.x)*(nw/vb.w);
+  vb.y = sy - (sy-vb.y)*(nh/vb.h);
+  vb.w=nw; vb.h=nh;
+  applyVB();
+}
+mapwrap.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const r=mapwrap.getBoundingClientRect();
+  zoomAt(e.deltaY>0?1.15:0.87, e.clientX-r.left, e.clientY-r.top);
+},{passive:false});
+let drag=null;
+mapwrap.addEventListener('pointerdown',e=>{
+  if(e.target.closest('.pin')) return;
+  drag={x:e.clientX,y:e.clientY,vbx:vb.x,vby:vb.y};
+  mapwrap.classList.add('drag'); mapwrap.setPointerCapture(e.pointerId);
+});
+mapwrap.addEventListener('pointermove',e=>{
+  if(!drag) return;
+  const W=mapwrap.clientWidth, H=mapwrap.clientHeight;
+  const scale=Math.min(W/vb.w, H/vb.h);
+  vb.x=drag.vbx-(e.clientX-drag.x)/scale;
+  vb.y=drag.vby-(e.clientY-drag.y)/scale;
+  applyVB();
+});
+const endDrag=()=>{drag=null; mapwrap.classList.remove('drag');};
+mapwrap.addEventListener('pointerup',endDrag);
+mapwrap.addEventListener('pointercancel',endDrag);
+
+function flyTo(t){
+  const [sx,sy]=proj(t.pin[0],t.pin[1]);
+  const targetW=Math.max(FRAME.w*0.16, 42);
+  const ratio=vb.h/vb.w;
+  const start=[...Object.values(vb)], s={...vb};
+  const e={w:targetW, h:targetW*ratio, x:sx-targetW/2, y:sy-targetW*ratio/2};
+  const t0=performance.now(), dur=520;
+  function step(now){
+    const k=Math.min(1,(now-t0)/dur), ease=1-Math.pow(1-k,3);
+    vb.x=s.x+(e.x-s.x)*ease; vb.y=s.y+(e.y-s.y)*ease;
+    vb.w=s.w+(e.w-s.w)*ease; vb.h=s.h+(e.h-s.h)*ease;
+    applyVB();
+    if(k<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+function resetView(){ vb={...FRAME}; applyVB(); }
+document.getElementById('zin').onclick=()=>zoomAt(0.7, mapwrap.clientWidth/2, mapwrap.clientHeight/2);
+document.getElementById('zout').onclick=()=>zoomAt(1.43, mapwrap.clientWidth/2, mapwrap.clientHeight/2);
+document.getElementById('zreset').onclick=()=>{ select(-1); resetView(); };
+
+// ---- search ----
+document.getElementById('q').addEventListener('input',e=>{
+  const v=e.target.value.trim().toLowerCase();
+  TEAMS.forEach((t,i)=>{
+    const hit = !v || t.name.toLowerCase().includes(v) || t.conf.toLowerCase().includes(v);
+    rowEls[i].style.display=hit?'flex':'none';
+    pinEls[i].style.opacity = (!v||hit)?'1':'0.12';
+  });
+});
+
+window.addEventListener('resize', positionPins);
+applyVB();
+</script>
+</body>
+</html>
