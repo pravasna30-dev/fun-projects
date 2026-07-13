@@ -458,24 +458,21 @@ Salutations to Mitra, Ravi, Sūrya, Bhānu, Khaga, Pūṣā, Hiraṇyagarbha, Ma
 
 # YouTube Chapter / Description Template
 
-Source audio: `Aditya Hrudayam Parayanam.mp4`, 372.88s total (6:13), used under
-Creative Commons Attribution — **credit line still needs the actual channel
-name filled in below**, since I could not read it off the YouTube page
-(JS-rendered, fetch tool only returned the page footer). Fill in
-`[CHANNEL NAME / VIDEO TITLE]` before publishing.
+Source audio: your own recording, `Adithya Hrydayam Full.m4a` (375.05s
+total, ~6:15), recorded 2026-07-13. Self-recorded — no licensing/attribution
+question at all.
 
-**These timestamps are estimates, not verified by ear.** I have no way to
-listen to or transcribe the audio content, so I derived them by measuring the
-recitation's pace from detected breath-pauses (~4.9s per printed line,
-fairly consistent throughout) and distributing time proportionally by each
-chapter's line count. Real per-stanza timing could drift a few seconds
-either way, especially anywhere the reciter slows down, speeds up, or merges
-two lines without a breath. **You accepted keeping 1 chapter per stanza
-despite most individual stanzas landing at ~9–10 seconds — YouTube requires
-chapters to be at least 10 seconds apart, so it will likely silently drop or
-merge some of the shorter ones from the clickable chapter list even though
-they're listed in the description text.** Verses flagged "⚠" below are
-under or right at that 10s floor.
+**These timestamps are estimates, not verified by ear.** This is one
+continuous take rather than 34 separate clips, and silence-detection on it
+found only ~17 real pauses, unevenly spread (including one 87-second stretch
+with no detectable gap at all) — not enough to map cleanly onto 34 verse
+boundaries. So, same method as before: derived from the recitation's
+measured pace (~4.88s per printed line, consistent with the file's overall
+length) distributed proportionally by each chapter's line count. Real
+per-stanza timing could drift a few seconds either way. **Individual stanzas
+land at ~9.75 seconds, under YouTube's 10-second-per-chapter minimum**, so
+some may not register as clickable chapters even though they're listed
+below. Verses flagged "⚠" are under that floor.
 
 YouTube chapter rules:
 - First chapter **must** start at `0:00`.
@@ -485,47 +482,47 @@ YouTube chapter rules:
 
 ```
 0:00 Invocation
-0:20 Verse 1        ⚠ ~9.8s
-0:29 Verse 2        ⚠ ~9.8s
-0:39 Verse 3        ⚠ ~9.8s
-0:49 Verse 4        ⚠ ~9.8s
-0:59 Verse 5        ⚠ ~9.8s
-1:08 Verse 6        ⚠ ~9.8s
-1:18 Verse 7        ⚠ ~9.8s
-1:28 Verse 8        ⚠ ~9.8s
-1:38 Verse 9        ⚠ ~9.8s
-1:48 Verse 10       ⚠ ~9.8s
-1:57 Verse 11       ⚠ ~9.8s
-2:07 Verse 12       ⚠ ~9.8s
-2:17 Verse 13       ⚠ ~9.8s
-2:27 Verse 14       ⚠ ~9.8s
-2:36 Verse 15       ⚠ ~9.8s
-2:46 Verse 16       ⚠ ~9.8s
-2:56 Verse 17       ⚠ ~9.8s
-3:06 Verse 18       ⚠ ~9.8s
-3:15 Verse 19       ⚠ ~9.8s
-3:25 Verse 20       ⚠ ~9.8s
-3:35 Verse 21       ⚠ ~9.8s
-3:45 Verse 22       ⚠ ~9.8s
-3:55 Verse 23       ⚠ ~9.8s
-4:04 Verse 24       ⚠ ~9.8s
-4:14 Verse 25       ⚠ ~9.8s
-4:24 Verse 26       ⚠ ~9.8s
-4:34 Verse 27       ⚠ ~9.8s
-4:43 Verse 28       ⚠ ~9.8s
-4:53 Verse 29       ⚠ ~9.8s
-5:03 Verse 30       (~9.8s to next, ~19.8s to Dhyana verse after closing narrative folded in)
-5:13 Closing narrative verse   (~19.5s, 4 lines)
-5:32 Dhyana verse              (~19.5s, 4 lines)
-5:52 Final salutation          (~14.7s, 3 lines, runs to file end ~6:13)
+0:22 Verse 1        ⚠ ~9.8s
+0:32 Verse 2        ⚠ ~9.8s
+0:42 Verse 3        ⚠ ~9.8s
+0:51 Verse 4        ⚠ ~9.8s
+1:01 Verse 5        ⚠ ~9.8s
+1:11 Verse 6        ⚠ ~9.8s
+1:21 Verse 7        ⚠ ~9.8s
+1:30 Verse 8        ⚠ ~9.8s
+1:40 Verse 9        ⚠ ~9.8s
+1:50 Verse 10       ⚠ ~9.8s
+2:00 Verse 11       ⚠ ~9.8s
+2:09 Verse 12       ⚠ ~9.8s
+2:19 Verse 13       ⚠ ~9.8s
+2:29 Verse 14       ⚠ ~9.8s
+2:39 Verse 15       ⚠ ~9.8s
+2:48 Verse 16       ⚠ ~9.8s
+2:58 Verse 17       ⚠ ~9.8s
+3:08 Verse 18       ⚠ ~9.8s
+3:18 Verse 19       ⚠ ~9.8s
+3:27 Verse 20       ⚠ ~9.8s
+3:37 Verse 21       ⚠ ~9.8s
+3:47 Verse 22       ⚠ ~9.8s
+3:57 Verse 23       ⚠ ~9.8s
+4:06 Verse 24       ⚠ ~9.8s
+4:16 Verse 25       ⚠ ~9.8s
+4:26 Verse 26       ⚠ ~9.8s
+4:36 Verse 27       ⚠ ~9.8s
+4:45 Verse 28       ⚠ ~9.8s
+4:55 Verse 29       ⚠ ~9.8s
+5:05 Verse 30       (~9.8s to next, ~19.5s to Dhyana verse after closing narrative folded in)
+5:15 Closing narrative verse   (~19.5s, 4 lines)
+5:34 Dhyana verse              (~19.5s, 4 lines)
+5:54 Final salutation          (~14.6s, 3 lines, runs to file end ~6:15)
 ```
 
 Recommended fix for the ⚠ chapters: merge each into the following one (pair
 verses 2-at-a-time) so every chapter clears 10s — say the word and I'll
-regenerate the block that way. Either way, **before publishing, scrub through
-in VLC (already open) against the Sanskrit in this doc and correct any
-timestamp that's audibly off** — this proportional estimate is a starting
-draft, not a substitute for checking by ear.
+regenerate the block that way. Either way, **before publishing, listen
+through against the Sanskrit in this doc and correct any timestamp that's
+audibly off** — this proportional estimate is a starting draft, not a
+substitute for checking by ear.
 
 ---
 
