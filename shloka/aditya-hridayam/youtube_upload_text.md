@@ -19,42 +19,43 @@ stanza by stanza to make it easy to learn — full transliteration and English
 meaning for every chapter: [link to companion doc, if hosting it publicly]
 
 ⚠️ Chapter timestamps below are estimated from recitation pace, not
-frame-verified — if any land slightly off, that's why.
+frame-verified — if any land slightly off, that's why. Note: this video
+intentionally omits the opening Invocation ("Namah savitre...") and opens
+directly on Verse 1.
 
-0:00 Invocation
-0:22 Verse 1
-0:32 Verse 2
-0:42 Verse 3
-0:51 Verse 4
-1:01 Verse 5
-1:11 Verse 6
-1:21 Verse 7
-1:30 Verse 8
-1:40 Verse 9
-1:50 Verse 10
-2:00 Verse 11
-2:09 Verse 12
-2:19 Verse 13
-2:29 Verse 14
-2:39 Verse 15
-2:48 Verse 16
-2:58 Verse 17
-3:08 Verse 18
-3:18 Verse 19
-3:27 Verse 20
-3:37 Verse 21
-3:47 Verse 22
-3:57 Verse 23
-4:06 Verse 24
-4:16 Verse 25
-4:26 Verse 26
-4:36 Verse 27
-4:45 Verse 28
-4:55 Verse 29
-5:05 Verse 30
-5:15 Closing verse
-5:34 Dhyana verse
-5:54 Final salutation
+0:00 Verse 1 — Tato Yuddha
+0:10 Verse 2 — Daivataishcha Samaagamya
+0:20 Verse 3 — Rama Rama
+0:29 Verse 4 — Aaditya Hridayam
+0:39 Verse 5 — Sarva Mangala
+0:49 Verse 6 — Rashmi Mantam
+0:59 Verse 7 — Sarva Devaatmako
+1:08 Verse 8 — Esha Brahmaa
+1:18 Verse 9 — Pitaro Vasavassaadhyaa
+1:28 Verse 10 — Aadityassavitaa Sooryah
+1:38 Verse 11 — Haridashwah Sahasraarchih
+1:47 Verse 12 — Hiranya Garbhah
+1:57 Verse 13 — Vyoma Naathah
+2:07 Verse 14 — Aatapee Mandalee
+2:17 Verse 15 — Nakshatra Graha
+2:26 Verse 16 — Namah Poorvaaya
+2:36 Verse 17 — Jayaaya Jaya
+2:46 Verse 18 — Nama Ugraaya
+2:56 Verse 19 — Brahmeshaanaachyuteshaaya Sooryaayaaditya
+3:05 Verse 20 — Tamoghnaaya Himaghnaaya
+3:15 Verse 21 — Tapta Chaameekaraabhaaya
+3:25 Verse 22 — Naashayatyesha Vai
+3:35 Verse 23 — Esha Supteshu
+3:44 Verse 24 — Vedaashcha Kratavashchaiva
+3:54 Verse 25 — Enam Aapatsu
+4:04 Verse 26 — Poojayasvaina Mekaagro
+4:14 Verse 27 — Asmin Kshane
+4:23 Verse 28 — Etachchrutvaa Mahaa
+4:33 Verse 29 — Aadityam Prekshya
+4:43 Verse 30 — Raavanam Prekshya
+4:53 Closing verse — Atha Ravi
+5:12 Dhyana verse — Dhyeyassadaa Savitr
+5:32 Final salutation — Mitra Ravi
 
 Image credits (Wikimedia Commons, CC BY-SA):
 - Sculpture of Surya, the Sun God — Sir Nicholas de Mimsy-Porpington (CC BY-SA 4.0)

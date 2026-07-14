@@ -480,41 +480,46 @@ YouTube chapter rules:
   don't clear this.
 - Timestamps must be in ascending order, format `M:SS` or `H:MM:SS`.
 
+**The rendered video intentionally omits the Invocation** ("Namah savitre...")
+— it opens directly on Verse 1 at `0:00`. All timestamps below are shifted
+back by the ~22s the Invocation previously occupied. The Invocation's text
+and meaning are still documented above (Ch. 1) for reference even though
+it's not in this particular video/audio cut.
+
 ```
-0:00 Invocation
-0:22 Verse 1        ⚠ ~9.8s
-0:32 Verse 2        ⚠ ~9.8s
-0:42 Verse 3        ⚠ ~9.8s
-0:51 Verse 4        ⚠ ~9.8s
-1:01 Verse 5        ⚠ ~9.8s
-1:11 Verse 6        ⚠ ~9.8s
-1:21 Verse 7        ⚠ ~9.8s
-1:30 Verse 8        ⚠ ~9.8s
-1:40 Verse 9        ⚠ ~9.8s
-1:50 Verse 10       ⚠ ~9.8s
-2:00 Verse 11       ⚠ ~9.8s
-2:09 Verse 12       ⚠ ~9.8s
-2:19 Verse 13       ⚠ ~9.8s
-2:29 Verse 14       ⚠ ~9.8s
-2:39 Verse 15       ⚠ ~9.8s
-2:48 Verse 16       ⚠ ~9.8s
-2:58 Verse 17       ⚠ ~9.8s
-3:08 Verse 18       ⚠ ~9.8s
-3:18 Verse 19       ⚠ ~9.8s
-3:27 Verse 20       ⚠ ~9.8s
-3:37 Verse 21       ⚠ ~9.8s
-3:47 Verse 22       ⚠ ~9.8s
-3:57 Verse 23       ⚠ ~9.8s
-4:06 Verse 24       ⚠ ~9.8s
-4:16 Verse 25       ⚠ ~9.8s
-4:26 Verse 26       ⚠ ~9.8s
-4:36 Verse 27       ⚠ ~9.8s
-4:45 Verse 28       ⚠ ~9.8s
-4:55 Verse 29       ⚠ ~9.8s
-5:05 Verse 30       (~9.8s to next, ~19.5s to Dhyana verse after closing narrative folded in)
-5:15 Closing narrative verse   (~19.5s, 4 lines)
-5:34 Dhyana verse              (~19.5s, 4 lines)
-5:54 Final salutation          (~14.6s, 3 lines, runs to file end ~6:15)
+0:00 Verse 1 — Tato Yuddha              ⚠ ~9.8s
+0:10 Verse 2 — Daivataishcha Samaagamya ⚠ ~9.8s
+0:20 Verse 3 — Rama Rama                ⚠ ~9.8s
+0:29 Verse 4 — Aaditya Hridayam         ⚠ ~9.8s
+0:39 Verse 5 — Sarva Mangala            ⚠ ~9.8s
+0:49 Verse 6 — Rashmi Mantam            ⚠ ~9.8s
+0:59 Verse 7 — Sarva Devaatmako         ⚠ ~9.8s
+1:08 Verse 8 — Esha Brahmaa             ⚠ ~9.8s
+1:18 Verse 9 — Pitaro Vasavassaadhyaa   ⚠ ~9.8s
+1:28 Verse 10 — Aadityassavitaa Sooryah ⚠ ~9.8s
+1:38 Verse 11 — Haridashwah Sahasraarchih ⚠ ~9.8s
+1:47 Verse 12 — Hiranya Garbhah         ⚠ ~9.8s
+1:57 Verse 13 — Vyoma Naathah           ⚠ ~9.8s
+2:07 Verse 14 — Aatapee Mandalee        ⚠ ~9.8s
+2:17 Verse 15 — Nakshatra Graha         ⚠ ~9.8s
+2:26 Verse 16 — Namah Poorvaaya         ⚠ ~9.8s
+2:36 Verse 17 — Jayaaya Jaya            ⚠ ~9.8s
+2:46 Verse 18 — Nama Ugraaya            ⚠ ~9.8s
+2:56 Verse 19 — Brahmeshaanaachyuteshaaya Sooryaayaaditya ⚠ ~9.8s
+3:05 Verse 20 — Tamoghnaaya Himaghnaaya ⚠ ~9.8s
+3:15 Verse 21 — Tapta Chaameekaraabhaaya ⚠ ~9.8s
+3:25 Verse 22 — Naashayatyesha Vai      ⚠ ~9.8s
+3:35 Verse 23 — Esha Supteshu           ⚠ ~9.8s
+3:44 Verse 24 — Vedaashcha Kratavashchaiva ⚠ ~9.8s
+3:54 Verse 25 — Enam Aapatsu            ⚠ ~9.8s
+4:04 Verse 26 — Poojayasvaina Mekaagro  ⚠ ~9.8s
+4:14 Verse 27 — Asmin Kshane            ⚠ ~9.8s
+4:23 Verse 28 — Etachchrutvaa Mahaa     ⚠ ~9.8s
+4:33 Verse 29 — Aadityam Prekshya       ⚠ ~9.8s
+4:43 Verse 30 — Raavanam Prekshya       (~9.8s to next, ~19.5s to Dhyana verse after closing narrative folded in)
+4:53 Closing narrative verse — Atha Ravi     (~19.5s, 4 lines)
+5:12 Dhyana verse — Dhyeyassadaa Savitr      (~19.5s, 4 lines)
+5:32 Final salutation — Mitra Ravi           (~14.6s, 3 lines, runs to file end ~5:53)
 ```
 
 Recommended fix for the ⚠ chapters: merge each into the following one (pair
