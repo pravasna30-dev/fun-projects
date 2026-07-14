@@ -42,6 +42,23 @@ marks the end of a chapter in the source epic and is traditionally read as a
 note, not chanted. Call this out rather than silently including or excluding
 it.
 
+⏸ **Some hymn names refer to genuinely distinct texts, not just editions of
+one text.** Medha Suktam, for example, is three unrelated hymns (a 6-verse
+Mahanarayana Upanishad version, a 9-mantra Rig Veda khila sukta, and a
+lesser-known 5-verse Atharva Veda version) that happen to share a name — this
+is a different problem from a verse-count mismatch within one known text, and
+needs its own check: search "<hymn name> versions" before assuming there's
+only one text to enumerate, and confirm which one with the user.
+
+When sourcing the text itself, check whether the specific source file/PDF
+carries its own reuse restriction (e.g. sanskritdocuments.org transliterations
+often include a "not to be reposted without permission" notice from the
+transcriber, even though the underlying scripture is millennia old and
+unambiguously public domain). The restriction is on that particular typeset
+file, not the text — write your own clean transliteration into the companion
+doc rather than reproducing the source file's formatting/markup, the same way
+Step 2 cross-checks rather than copies translation sites.
+
 ## Step 2 — Verify meaning, don't recite it from memory
 
 Even for extremely famous stotras, don't generate the English meaning purely
@@ -126,39 +143,112 @@ gives a learner a natural beat to process each stanza) using `ffmpeg`. This
 gives *exact* cumulative timestamps by construction — no estimation involved.
 See `references/ffmpeg-recipes.md` for the concatenation approach.
 
-**Fallback: a pre-existing continuous recording.** If the user insists on
-using an already-recorded continuous file, you can't reliably know which
-words are playing at which timestamp without an actual transcription/speech-
-recognition tool — don't pretend otherwise. `ffmpeg silencedetect` can find
-where breath-pauses are, but a fast continuous chant often has near-uniform
-pause spacing that doesn't cleanly map one-to-one onto verse boundaries the
-deeper into the file you go (drift compounds). The best honest fallback is
-proportional distribution: measure the average pace from the detected gaps,
-distribute time across chapters by their relative line-count, and **label
-the result explicitly as an unverified estimate**, not a fact — and tell the
-user it should be checked by ear (in a media player) before publishing, since
-you can't listen to the audio content yourself.
+**Fallback tier 1 — proportional estimate.** If you truly can't do better,
+`ffmpeg silencedetect` finds where breath-pauses are, but a fast continuous
+chant often has near-uniform pause spacing that doesn't cleanly map one-to-
+one onto verse boundaries the deeper into the file you go (drift compounds).
+The fallback is proportional distribution: measure the average pace from the
+detected gaps, distribute time across chapters by their relative line-count,
+and **label the result explicitly as an unverified estimate**, not a fact.
+Treat this as a last resort, not a default — see the tier below first.
+
+**Fallback tier 2 — local Whisper transcription (do this before settling for
+tier 1, or when the user pushes back on inaccurate sync).** Install
+`openai-whisper` into an isolated venv (see `references/ffmpeg-recipes.md`
+for the exact setup — the system Python is externally-managed and blocks a
+plain `pip install`) and run it on the audio with `word_timestamps=True`.
+Whisper won't produce a correct *transcript* for Sanskrit chanting — it'll
+guess phonetically garbled English-ish words — but its segment-level speech
+detection is far better than a raw amplitude threshold at finding real
+phrase boundaries, and it's fast enough on CPU (a few minutes for a 6-minute
+recording) to be worth trying before falling back to a rough estimate. Read
+each garbled segment against the known Sanskrit text — the phonetic
+resemblance is usually close enough to identify which verse-line it is even
+though Whisper mis-transcribed it, since you already know the reference text
+from Step 1/2. This turns "estimate the pace" into "read off the real start
+time of every line," which is a categorically better result.
+
+**This also catches a failure mode that a proportional estimate cannot: the
+recording not actually containing what you assumed it contains.** In one
+run, an assumed-present opening invocation was trimmed off the front of a
+video by estimated duration — except the reciter had never chanted that
+invocation at all, so the trim silently cut off the start of Verse 1 instead
+and desynced everything after it. The same recording's real last spoken
+segment landed several seconds before two more "chapters" the video still
+had captions/images for (a Dhyana verse and closing salutation that, it
+turned out, were never recorded either). A transcription pass exposes
+mismatches like this directly — trailing/leading silence location, verses
+skipped or repeated, an extra unplanned chapter — that pure timing math has
+no way to catch. If the user reports "the sync is off," don't just retune
+the proportional estimate; re-derive the segment boundaries and check that
+the chapter list actually matches what's in the recording.
 
 ⏸ **Always check whether individual stanza-length chapters clear the 10-
 second minimum** at the recording's actual pace, and flag it if they don't
 — a fast recitation can easily put 2-line stanzas under 10 seconds. Offer
 the fix (pair verses two-per-chapter, or insert a deliberate pause per
-stanza) rather than silently producing chapters YouTube will drop.
+stanza) rather than silently producing chapters YouTube will drop. Real
+Whisper-derived timestamps usually clear this comfortably more often than a
+uniform proportional estimate does, since actual recitation pace varies
+verse to verse rather than being perfectly even.
 
-## Step 6 — Local/private rendering (never for upload)
+⏸ **Whenever timestamps change, update every place they're duplicated** —
+the companion doc's chapter/description block *and* a separate paste-ready
+upload-text file both need the same edit, and it's easy to update one and
+forget the other.
+
+## Step 6 — Per-stanza images (optional, if the user wants a visual per chapter)
+
+There is normally no image-generation tool available — check before assuming
+otherwise, and don't treat "download a skill for image generation" as
+meaningful; a skill is instructions, not a capability, and can't grant image
+generation on its own. Real image generation would need an actual configured
+tool (an MCP server hitting a paid API), which is a heavier setup than most
+users expect when they ask for this.
+
+What *does* work well: source real, rights-clear images from Wikimedia
+Commons, one per chapter, matched to that stanza's theme/subject. Search
+`site:commons.wikimedia.org` for the deity/scene/concept named in each
+stanza, then verify the license on the actual Commons file page before using
+anything (WebFetch the `/wiki/File:...` page and check for "public domain",
+"CC0", or "CC BY-SA" — note CC BY-SA requires a visible credit line
+wherever the image is used, including in the video description).
+
+Full per-stanza uniqueness usually isn't a meaningful goal — many stotras
+have long runs of verses that are just lists of a deity's names/epithets
+with no distinct narrative content, so those verses legitimately share the
+same handful of images. Spend the real research effort on the verses that
+do have distinct content (narrative scenes, specific iconography described
+in a dhyana verse, etc.) and don't force artificial variety elsewhere.
+Document the full file list with license/credit per file, plus the
+chapter-to-image mapping and a one-line reason for each choice, in an
+`images/IMAGES.md` alongside the downloaded files (see
+`references/ffmpeg-recipes.md` for the download approach, including how to
+handle Wikimedia's rate limiting).
+
+## Step 7 — Local/private rendering (never for upload)
 
 If the user wants a local reference copy of someone else's copyrighted
 recording — for their own private listening or practice, not for publishing
 anywhere — that's a much lower-risk, reasonable ask (similar to format-
 shifting for personal use). You can extract the audio and re-render it with
-an original background in place of any branded cover art (a plain generated
-gradient/color background via `ffmpeg`'s `lavfi` source is enough — check
-first whether the local `ffmpeg` build actually has `drawtext`/freetype
-support before planning to overlay text, since minimal Homebrew builds
-sometimes lack it). Label the output file clearly as a private practice
-copy, and don't commit it to git or suggest uploading it — see Step 7.
+an original background in place of any branded cover art. Label the output
+file clearly as a private practice copy, and don't commit it to git or
+suggest uploading it — see Step 8.
 
-## Step 7 — Filing it under version control
+**If you need to burn text onto video frames (captions, chapter labels) and
+`ffmpeg drawtext` errors with "No such filter,"** don't assume `brew
+reinstall ffmpeg` will fix it — check `brew deps ffmpeg` / `brew cat ffmpeg`
+first. Homebrew's default `ffmpeg` bottle has, at times, shipped without
+`freetype`/`libass` compiled in at all, in which case reinstalling the same
+formula reproduces the identical build. Getting a `drawtext`-capable ffmpeg
+means a third-party tap compiled from source (slow, 10-20+ minutes) — a
+faster and more reliable fix is to skip `drawtext` entirely: install Pillow
+into an isolated venv (see `references/ffmpeg-recipes.md`) and composite the
+text directly onto each source image with `ImageDraw` before ffmpeg ever
+touches it. Same visual result, no dependency on ffmpeg's build flags.
+
+## Step 8 — Filing it under version control
 
 This repo (`fun-projects`) keeps personal creative projects together, each
 in its own lowercase folder (`marvels/`, `worldcup/`, etc.). For a hymn,
@@ -182,13 +272,14 @@ running `git commit`, the same way you would for any other repo.
 
 | Step | Output | Key checkpoint |
 |---|---|---|
-| 1. Enumerate | Verified chunk list | Verse count matches the actual source, not memory |
+| 1. Enumerate | Verified chunk list | Verse count *and version* match the actual source, not memory |
 | 2. Verify meaning | Cross-checked translations | Fetched real per-verse text, not a WebFetch summary |
 | 3. Companion doc | `<hymn>-companion.md` | Follows `references/companion-template.md` |
 | 4. Audio | Decision: record / license-cleared / private-only | Checked frames/branding before trusting provenance |
-| 5. Timestamps | Real or clearly-labeled-estimated chapter list | 10s-minimum check done |
-| 6. Private render | Local mp4, never committed | New background, not the copyrighted cover art |
-| 7. Repo filing | `shloka/<hymn>/` + `REFERENCES.md` | No copyrighted media staged |
+| 5. Timestamps | Whisper-verified, or clearly-labeled-estimated, chapter list | Tried Whisper before settling for a proportional estimate; both timestamp locations updated together |
+| 6. Images (optional) | `images/` + `IMAGES.md` | Real Wikimedia sources, license verified per file |
+| 7. Private render | Local mp4, never committed | New background, not the copyrighted cover art |
+| 8. Repo filing | `shloka/<hymn>/` + `REFERENCES.md` | No copyrighted media staged |
 
 See `references/ffmpeg-recipes.md` for copy-paste `ffmpeg`/`ffprobe`
 commands for frame extraction, silence detection, gap-concatenation, and

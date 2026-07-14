@@ -105,3 +105,103 @@ ffmpeg -y -f lavfi -i "gradients=s=1080x1080:d=<duration>:c0=0x0b1a33:c1=0x3a1f0
 
 Set `-d` generously past the actual audio length — `-shortest` trims the
 output to match the audio track regardless.
+
+## 6. Python tooling (Pillow, Whisper) — use an isolated venv
+
+The system Python here is externally-managed (PEP 668) — a plain `pip
+install` fails with an error pointing at `--break-system-packages`. Don't
+use that flag; create a throwaway venv in scratchpad instead, which avoids
+touching the system install entirely and needs no cleanup decision later:
+
+```bash
+python3 -m venv /path/to/scratchpad/venv
+source /path/to/scratchpad/venv/bin/activate
+pip install --quiet Pillow openai-whisper
+```
+
+## 7. Burning text onto stanza images with Pillow (drawtext workaround)
+
+When `ffmpeg drawtext` isn't available (see SKILL.md Step 7), composite text
+directly onto the source image before it ever reaches ffmpeg:
+
+```python
+from PIL import Image, ImageDraw, ImageFont
+
+W, H = 1280, 720
+img = Image.open(source_path).convert("RGB")
+ratio = min(W / img.width, H / img.height)
+resized = img.resize((int(img.width * ratio), int(img.height * ratio)), Image.LANCZOS)
+canvas = Image.new("RGB", (W, H), (10, 15, 25))
+canvas.paste(resized, ((W - resized.width) // 2, (H - resized.height) // 2))
+
+overlay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+draw = ImageDraw.Draw(overlay)
+font = ImageFont.truetype("/System/Library/Fonts/Supplemental/Georgia Bold.ttf", 42)
+draw.rectangle([(0, 0), (W, 70)], fill=(0, 0, 0, 170))       # semi-transparent bar
+draw.text((24, 14), "Verse 1 — Tato Yuddha", font=font, fill=(255, 255, 255, 255))
+
+Image.alpha_composite(canvas.convert("RGBA"), overlay).convert("RGB").save(out_path, quality=90)
+```
+
+Then feed the composited images into the normal `-loop 1 -i image -t
+<duration>` segment-building recipe (#4/#5 above) — no `drawtext` filter
+needed anywhere in the ffmpeg pipeline.
+
+## 8. Sourcing images from Wikimedia Commons without getting rate-limited
+
+Search with `site:commons.wikimedia.org` in the query. Before using a file,
+fetch its `/wiki/File:...` page and confirm the license (public domain, CC0,
+or CC BY-SA — note the credit name required for the latter). Then download
+the **direct** `upload.wikimedia.org` URL from that page.
+
+Downloading many files back-to-back in a tight loop triggers a 429 "Too many
+requests" error. If that happens, don't just retry the same URL — either add
+a short delay between requests, or switch to a `thumb/` URL, which is
+usually enough to route around the block:
+
+```
+https://upload.wikimedia.org/wikipedia/commons/thumb/<hash-path>/<file>/<width>px-<file>
+```
+
+Wikimedia only serves a fixed whitelist of thumbnail widths and 400s on
+anything else ("Use thumbnail sizes listed on ..."): **20, 40, 60, 120, 250,
+330, 500, 960, 1280, 1920, 3840**. Use one of these, not an arbitrary number.
+
+## 9. Multi-step ffmpeg loops: write a `.sh` file, don't inline bash arrays
+
+Constructs like `${!array[@]}` or `${#array[@]}` are real bash syntax but
+fail with "bad substitution" if the command actually executes under zsh
+(this environment's default shell). Rather than debugging shell-specific
+array semantics inline, write the loop to a standalone `.sh` file and
+execute it with an explicit `bash script.sh` — guarantees bash semantics
+regardless of what shell the Bash tool would otherwise use.
+
+## 10. Getting real timestamps out of a continuous recording (Whisper)
+
+See SKILL.md Step 5, fallback tier 2, for when to reach for this. Practical
+steps once Pillow/Whisper are installed per recipe #6:
+
+```python
+import whisper, json
+
+model = whisper.load_model("base")
+result = model.transcribe(audio_path, word_timestamps=True, verbose=False)
+
+for seg in result["segments"]:
+    print(f'{seg["start"]:.1f} - {seg["end"]:.1f}: {seg["text"].strip()}')
+```
+
+Read the printed (garbled) segments against the known Sanskrit text in
+order — the phonetic resemblance is normally close enough to match each
+segment to the correct verse-line despite Whisper mis-transcribing the
+actual words. Segment *start times* are what you want; a verse's start time
+is the start of its first line's segment. Watch for:
+- **Occasional hallucinated repeated syllables** (e.g. a run of "ya ya ya
+  ya...") on a held or emphasized sound — the segment's start time is still
+  usable even when its text is garbage.
+- **A recording covering less (or different) content than assumed** — if
+  the last real segment ends well before the audio file's actual end, or a
+  verse you expected to hear never shows up in order, the recording may
+  simply not contain what you assumed it did. Don't paper over this by
+  forcing a timestamp; go back and confirm the actual chapter list against
+  what was really recorded.

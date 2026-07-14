@@ -18,44 +18,43 @@ his final battle with Ravana (Valmiki Ramayana, Yuddha Kanda). Chanted here
 stanza by stanza to make it easy to learn — full transliteration and English
 meaning for every chapter: [link to companion doc, if hosting it publicly]
 
-⚠️ Chapter timestamps below are estimated from recitation pace, not
-frame-verified — if any land slightly off, that's why. Note: this video
-intentionally omits the opening Invocation ("Namah savitre...") and opens
-directly on Verse 1.
+Chapter timestamps below are verified via local Whisper transcription (not
+just estimated from pace) — see shloka-companion skill for the method. Note:
+this recording covers Verse 1 through the closing narrative verse only; it
+does not include the opening Invocation, the Dhyana verse, or the Final
+salutation.
 
 0:00 Verse 1 — Tato Yuddha
-0:10 Verse 2 — Daivataishcha Samaagamya
-0:20 Verse 3 — Rama Rama
-0:29 Verse 4 — Aaditya Hridayam
-0:39 Verse 5 — Sarva Mangala
-0:49 Verse 6 — Rashmi Mantam
-0:59 Verse 7 — Sarva Devaatmako
-1:08 Verse 8 — Esha Brahmaa
-1:18 Verse 9 — Pitaro Vasavassaadhyaa
-1:28 Verse 10 — Aadityassavitaa Sooryah
-1:38 Verse 11 — Haridashwah Sahasraarchih
-1:47 Verse 12 — Hiranya Garbhah
-1:57 Verse 13 — Vyoma Naathah
-2:07 Verse 14 — Aatapee Mandalee
-2:17 Verse 15 — Nakshatra Graha
-2:26 Verse 16 — Namah Poorvaaya
-2:36 Verse 17 — Jayaaya Jaya
-2:46 Verse 18 — Nama Ugraaya
-2:56 Verse 19 — Brahmeshaanaachyuteshaaya Sooryaayaaditya
-3:05 Verse 20 — Tamoghnaaya Himaghnaaya
-3:15 Verse 21 — Tapta Chaameekaraabhaaya
-3:25 Verse 22 — Naashayatyesha Vai
-3:35 Verse 23 — Esha Supteshu
-3:44 Verse 24 — Vedaashcha Kratavashchaiva
-3:54 Verse 25 — Enam Aapatsu
-4:04 Verse 26 — Poojayasvaina Mekaagro
-4:14 Verse 27 — Asmin Kshane
-4:23 Verse 28 — Etachchrutvaa Mahaa
-4:33 Verse 29 — Aadityam Prekshya
-4:43 Verse 30 — Raavanam Prekshya
-4:53 Closing verse — Atha Ravi
-5:12 Dhyana verse — Dhyeyassadaa Savitr
-5:32 Final salutation — Mitra Ravi
+0:14 Verse 2 — Daivataishcha Samaagamya
+0:25 Verse 3 — Rama Rama
+0:36 Verse 4 — Aaditya Hridayam
+0:47 Verse 5 — Sarva Mangala
+0:58 Verse 6 — Rashmi Mantam
+1:09 Verse 7 — Sarva Devaatmako
+1:21 Verse 8 — Esha Brahmaa
+1:34 Verse 9 — Pitaro Vasavassaadhyaa
+1:46 Verse 10 — Aadityassavitaa Sooryah
+1:58 Verse 11 — Haridashwah Sahasraarchih
+2:10 Verse 12 — Hiranya Garbhah
+2:20 Verse 13 — Vyoma Naathah
+2:31 Verse 14 — Aatapee Mandalee
+2:43 Verse 15 — Nakshatra Graha
+2:54 Verse 16 — Namah Poorvaaya
+3:09 Verse 17 — Jayaaya Jaya
+3:17 Verse 18 — Nama Ugraaya
+3:28 Verse 19 — Brahmeshaanaachyuteshaaya Sooryaayaaditya
+3:40 Verse 20 — Tamoghnaaya Himaghnaaya
+3:51 Verse 21 — Tapta Chaameekaraabhaaya
+4:02 Verse 22 — Naashayatyesha Vai
+4:14 Verse 23 — Esha Supteshu
+4:25 Verse 24 — Vedaashcha Kratavashchaiva
+4:37 Verse 25 — Enam Aapatsu
+4:50 Verse 26 — Poojayasvaina Mekaagro
+5:01 Verse 27 — Asmin Kshane
+5:14 Verse 28 — Etachchrutvaa Mahaa
+5:26 Verse 29 — Aadityam Prekshya
+5:39 Verse 30 — Raavanam Prekshya
+5:50 Closing narrative verse — Atha Ravi
 
 Image credits (Wikimedia Commons, CC BY-SA):
 - Sculpture of Surya, the Sun God — Sir Nicholas de Mimsy-Porpington (CC BY-SA 4.0)
@@ -70,9 +69,9 @@ credit list: shloka/aditya-hridayam/images/IMAGES.md in this project's repo.
 
 ## Notes before uploading
 
-- Several chapters run close to YouTube's 10-second minimum — a few may not
-  register as clickable chapters even though they're listed in the text
-  (see the ⚠ flags in `aditya_hridayam_companion.md`).
+- One chapter (Verse 17) runs ~8.1s, under YouTube's 10-second minimum, and
+  may not register as clickable even though it's listed in the text — merge
+  it into Verse 18 if that matters to you.
 - Thumbnail: optional. If you want a custom one rather than letting YouTube
   auto-pick a frame, `images/01-trimurti-brahma-vishnu-mahesh.jpg` or
   `images/04-sculpture-of-surya.jpg` would both work well.

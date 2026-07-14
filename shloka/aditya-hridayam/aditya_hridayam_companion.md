@@ -462,72 +462,70 @@ Source audio: your own recording, `Adithya Hrydayam Full.m4a` (375.05s
 total, ~6:15), recorded 2026-07-13. Self-recorded — no licensing/attribution
 question at all.
 
-**These timestamps are estimates, not verified by ear.** This is one
-continuous take rather than 34 separate clips, and silence-detection on it
-found only ~17 real pauses, unevenly spread (including one 87-second stretch
-with no detectable gap at all) — not enough to map cleanly onto 34 verse
-boundaries. So, same method as before: derived from the recitation's
-measured pace (~4.88s per printed line, consistent with the file's overall
-length) distributed proportionally by each chapter's line count. Real
-per-stanza timing could drift a few seconds either way. **Individual stanzas
-land at ~9.75 seconds, under YouTube's 10-second-per-chapter minimum**, so
-some may not register as clickable chapters even though they're listed
-below. Verses flagged "⚠" are under that floor.
+**CORRECTED via local Whisper transcription** (see shloka-companion skill,
+Step 5, fallback tier 2 — installing Whisper locally and reading its
+garbled-but-boundary-accurate segments against the known text). The earlier
+estimate here was wrong in two real ways, not just imprecise: this recording
+never contained the Invocation *or* the closing Dhyana verse and Final
+salutation at all, and an earlier attempt to trim an assumed ~22s Invocation
+off the front actually cut into real Verse 1 audio, desyncing everything
+after it. The recording runs from Verse 1 straight through the closing
+narrative verse and then stops. **This video has 31 chapters, not 34** — the
+Invocation, Dhyana verse, and Final salutation are still documented earlier
+in this file for reference, they're just not part of this particular
+recording/video.
+
+Timestamps below are the actual verse-start times Whisper detected in the
+full, untrimmed recording, cross-checked line-by-line against the known
+Sanskrit text.
 
 YouTube chapter rules:
 - First chapter **must** start at `0:00`.
-- At least 3 chapters, each **at least 10 seconds** long — several below
-  don't clear this.
+- At least 3 chapters, each **at least 10 seconds** long.
 - Timestamps must be in ascending order, format `M:SS` or `H:MM:SS`.
 
-**The rendered video intentionally omits the Invocation** ("Namah savitre...")
-— it opens directly on Verse 1 at `0:00`. All timestamps below are shifted
-back by the ~22s the Invocation previously occupied. The Invocation's text
-and meaning are still documented above (Ch. 1) for reference even though
-it's not in this particular video/audio cut.
-
 ```
-0:00 Verse 1 — Tato Yuddha              ⚠ ~9.8s
-0:10 Verse 2 — Daivataishcha Samaagamya ⚠ ~9.8s
-0:20 Verse 3 — Rama Rama                ⚠ ~9.8s
-0:29 Verse 4 — Aaditya Hridayam         ⚠ ~9.8s
-0:39 Verse 5 — Sarva Mangala            ⚠ ~9.8s
-0:49 Verse 6 — Rashmi Mantam            ⚠ ~9.8s
-0:59 Verse 7 — Sarva Devaatmako         ⚠ ~9.8s
-1:08 Verse 8 — Esha Brahmaa             ⚠ ~9.8s
-1:18 Verse 9 — Pitaro Vasavassaadhyaa   ⚠ ~9.8s
-1:28 Verse 10 — Aadityassavitaa Sooryah ⚠ ~9.8s
-1:38 Verse 11 — Haridashwah Sahasraarchih ⚠ ~9.8s
-1:47 Verse 12 — Hiranya Garbhah         ⚠ ~9.8s
-1:57 Verse 13 — Vyoma Naathah           ⚠ ~9.8s
-2:07 Verse 14 — Aatapee Mandalee        ⚠ ~9.8s
-2:17 Verse 15 — Nakshatra Graha         ⚠ ~9.8s
-2:26 Verse 16 — Namah Poorvaaya         ⚠ ~9.8s
-2:36 Verse 17 — Jayaaya Jaya            ⚠ ~9.8s
-2:46 Verse 18 — Nama Ugraaya            ⚠ ~9.8s
-2:56 Verse 19 — Brahmeshaanaachyuteshaaya Sooryaayaaditya ⚠ ~9.8s
-3:05 Verse 20 — Tamoghnaaya Himaghnaaya ⚠ ~9.8s
-3:15 Verse 21 — Tapta Chaameekaraabhaaya ⚠ ~9.8s
-3:25 Verse 22 — Naashayatyesha Vai      ⚠ ~9.8s
-3:35 Verse 23 — Esha Supteshu           ⚠ ~9.8s
-3:44 Verse 24 — Vedaashcha Kratavashchaiva ⚠ ~9.8s
-3:54 Verse 25 — Enam Aapatsu            ⚠ ~9.8s
-4:04 Verse 26 — Poojayasvaina Mekaagro  ⚠ ~9.8s
-4:14 Verse 27 — Asmin Kshane            ⚠ ~9.8s
-4:23 Verse 28 — Etachchrutvaa Mahaa     ⚠ ~9.8s
-4:33 Verse 29 — Aadityam Prekshya       ⚠ ~9.8s
-4:43 Verse 30 — Raavanam Prekshya       (~9.8s to next, ~19.5s to Dhyana verse after closing narrative folded in)
-4:53 Closing narrative verse — Atha Ravi     (~19.5s, 4 lines)
-5:12 Dhyana verse — Dhyeyassadaa Savitr      (~19.5s, 4 lines)
-5:32 Final salutation — Mitra Ravi           (~14.6s, 3 lines, runs to file end ~5:53)
+0:00 Verse 1 — Tato Yuddha
+0:14 Verse 2 — Daivataishcha Samaagamya
+0:25 Verse 3 — Rama Rama
+0:36 Verse 4 — Aaditya Hridayam
+0:47 Verse 5 — Sarva Mangala
+0:58 Verse 6 — Rashmi Mantam
+1:09 Verse 7 — Sarva Devaatmako
+1:21 Verse 8 — Esha Brahmaa
+1:34 Verse 9 — Pitaro Vasavassaadhyaa
+1:46 Verse 10 — Aadityassavitaa Sooryah
+1:58 Verse 11 — Haridashwah Sahasraarchih
+2:10 Verse 12 — Hiranya Garbhah
+2:20 Verse 13 — Vyoma Naathah
+2:31 Verse 14 — Aatapee Mandalee
+2:43 Verse 15 — Nakshatra Graha
+2:54 Verse 16 — Namah Poorvaaya
+3:09 Verse 17 — Jayaaya Jaya            ⚠ ~8.1s to next
+3:17 Verse 18 — Nama Ugraaya
+3:28 Verse 19 — Brahmeshaanaachyuteshaaya Sooryaayaaditya
+3:40 Verse 20 — Tamoghnaaya Himaghnaaya
+3:51 Verse 21 — Tapta Chaameekaraabhaaya
+4:02 Verse 22 — Naashayatyesha Vai
+4:14 Verse 23 — Esha Supteshu
+4:25 Verse 24 — Vedaashcha Kratavashchaiva
+4:37 Verse 25 — Enam Aapatsu
+4:50 Verse 26 — Poojayasvaina Mekaagro
+5:01 Verse 27 — Asmin Kshane
+5:14 Verse 28 — Etachchrutvaa Mahaa
+5:26 Verse 29 — Aadityam Prekshya
+5:39 Verse 30 — Raavanam Prekshya
+5:50 Closing narrative verse — Atha Ravi   (runs to file end ~6:15)
 ```
 
-Recommended fix for the ⚠ chapters: merge each into the following one (pair
-verses 2-at-a-time) so every chapter clears 10s — say the word and I'll
-regenerate the block that way. Either way, **before publishing, listen
-through against the Sanskrit in this doc and correct any timestamp that's
-audibly off** — this proportional estimate is a starting draft, not a
-substitute for checking by ear.
+Only one chapter (Verse 17 → 18) falls under YouTube's 10-second minimum —
+real recitation pace varies enough that this is far less of a problem than
+the old uniform proportional estimate was. Fix if it matters: merge Verse 17
+into Verse 18's chapter.
+
+Still worth a final listen-through before publishing — Whisper-verified
+boundaries are far more reliable than the old amplitude-threshold estimate,
+but "far more reliable" isn't the same as "verified by a human ear."
 
 ---
 
