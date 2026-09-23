@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pick Your State! · Taxes, Money & Choices</title>
+<meta name="description" content="An interactive U.S. map for middle schoolers: income, sales & property taxes, iPhone prices, retirement rankings and GDP for all 50 states + D.C.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff6e6;
+    --paper: #ffffff;
+    --ink: #1f1a3d;
+    --muted: #5c567a;
+    --line: #1f1a3d;
+    --mint: #20c9a6;
+    --sun: #ffc93c;
+    --coral: #ff6b6b;
+    --grape: #7b5cff;
+    --sky: #3fa7ff;
+    --pink: #ff5fa2;
+    --leaf: #36b24a;
+    --shadow: 4px 4px 0 var(--ink);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    background: var(--bg);
+    background-image: radial-gradient(rgba(31,26,61,.07) 1.2px, transparent 1.4px);
+    background-size: 22px 22px;
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .display { font-family: 'Fredoka', 'Nunito', sans-serif; letter-spacing: -.01em; }
+  a { color: var(--grape); }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- header ---------- */
+  .back { display: inline-block; margin-top: 18px; font-weight: 800; font-size: .9rem; color: var(--muted); text-decoration: none; }
+  .back:hover { color: var(--ink); }
+  header.hero { padding: 26px 0 8px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+  .kicker {
+    display: inline-block; background: var(--sun); border: 2.5px solid var(--line); border-radius: 999px;
+    padding: 3px 14px; font-weight: 800; font-size: .82rem; box-shadow: 3px 3px 0 var(--ink); transform: rotate(-2deg);
+  }
+  h1 { font-size: clamp(2.3rem, 6vw, 4.2rem); line-height: 1; margin: 16px 0 12px; font-weight: 700; }
+  h1 .pop { color: var(--coral); display: inline-block; transform: rotate(-3deg); text-shadow: 3px 3px 0 var(--ink); -webkit-text-stroke: 1.5px var(--ink); }
+  .lede { font-size: 1.12rem; max-width: 62ch; color: var(--muted); font-weight: 700; }
+  .lede b { color: var(--ink); }
+  .stickers { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; max-width: 330px; }
+  .sticker {
+    background: var(--paper); border: 2.5px solid var(--line); border-radius: 14px; box-shadow: var(--shadow);
+    padding: 8px 12px; font-weight: 800; font-size: .86rem; text-align: center; min-width: 96px;
+  }
+  .sticker big { display: block; font-family: 'Fredoka'; font-size: 1.7rem; line-height: 1.05; }
+  .sticker:nth-child(1) { transform: rotate(2deg); background: #dff9f1; }
+  .sticker:nth-child(2) { transform: rotate(-2deg); background: #fff0c9; }
+  .sticker:nth-child(3) { transform: rotate(1.5deg); background: #ffe1ec; }
+
+  /* ---------- lens tabs ---------- */
+  .lenses { display: flex; gap: 10px; flex-wrap: wrap; margin: 26px 0 14px; }
+  .lens {
+    font: 700 1rem 'Fredoka', sans-serif; color: var(--ink); cursor: pointer;
+    background: var(--paper); border: 2.5px solid var(--line); border-radius: 14px;
+    padding: 9px 14px; box-shadow: var(--shadow); transition: transform .12s, box-shadow .12s, background .15s;
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .lens:hover { transform: translate(-1px,-2px); box-shadow: 5px 6px 0 var(--ink); }
+  .lens:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--ink); }
+  .lens[aria-pressed="true"] { background: var(--lc, var(--sun)); color: #fff; text-shadow: 1.5px 1.5px 0 var(--ink); }
+  .lens .e { font-size: 1.2rem; text-shadow: none; }
+
+  /* ---------- main grid ---------- */
+  .stage { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 22px; align-items: start; }
+  .card {
+    background: var(--paper); border: 2.5px solid var(--line); border-radius: 22px; box-shadow: 6px 6px 0 var(--ink);
+  }
+  .mapcard { padding: 18px 18px 12px; position: relative; }
+  .lens-head { display: flex; gap: 14px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
+  .lens-head h2 { font-size: 1.6rem; line-height: 1.1; }
+  .lens-head p { color: var(--muted); font-weight: 700; max-width: 60ch; margin-top: 4px; }
+  .price-pick { display: none; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .price-pick.on { display: flex; }
+  .chip {
+    font: 800 .86rem 'Nunito'; cursor: pointer; border: 2px solid var(--line); border-radius: 999px;
+    padding: 4px 12px; background: #fff; color: var(--ink);
+  }
+  .chip[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .chip input { width: 70px; border: 0; font: inherit; background: transparent; color: inherit; outline: none; }
+
+  svg#map { width: 100%; height: auto; display: block; margin-top: 8px; overflow: visible; }
+  .st { stroke: var(--ink); stroke-width: 1.1; stroke-linejoin: round; cursor: pointer; transition: fill .45s ease, filter .15s; }
+  .st:hover, .st.sel { stroke-width: 2.6; filter: drop-shadow(2px 2px 0 rgba(31,26,61,.55)); }
+  .st:focus { outline: none; stroke-width: 3; }
+  .lab { font: 700 11px 'Fredoka', sans-serif; text-anchor: middle; dominant-baseline: central; pointer-events: none; fill: var(--ink); paint-order: stroke; stroke: rgba(255,255,255,.75); stroke-width: 2.6px; }
+  .co rect { stroke: var(--ink); stroke-width: 1.4; cursor: pointer; transition: fill .45s ease; }
+  .co text { font: 700 10.5px 'Fredoka'; text-anchor: middle; dominant-baseline: central; pointer-events: none; fill: var(--ink); }
+  .co line { stroke: var(--ink); stroke-width: .9; stroke-dasharray: 2 2; }
+  .co:hover rect, .co.sel rect { stroke-width: 2.6; }
+
+  .legend { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 6px; font-weight: 800; font-size: .86rem; }
+  .ramp { display: flex; align-items: center; gap: 8px; }
+  .ramp .bar { width: 180px; height: 14px; border: 2px solid var(--line); border-radius: 999px; }
+  .swatch { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch i { width: 16px; height: 16px; border: 2px solid var(--line); border-radius: 5px; display: inline-block; }
+
+  .tip {
+    position: fixed; pointer-events: none; z-index: 30; background: var(--ink); color: #fff; border-radius: 12px;
+    padding: 8px 12px; font-weight: 700; font-size: .88rem; opacity: 0; transform: translateY(4px);
+    transition: opacity .12s, transform .12s; max-width: 240px; box-shadow: 3px 3px 0 var(--coral);
+  }
+  .tip.on { opacity: 1; transform: none; }
+  .tip b { font-family: 'Fredoka'; font-size: 1rem; display: block; }
+
+  /* ---------- state card ---------- */
+  .statecard { padding: 18px; position: sticky; top: 14px; }
+  .statecard .empty { text-align: center; padding: 30px 8px; color: var(--muted); font-weight: 800; }
+  .statecard .empty .big { font-size: 3rem; display: block; animation: bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(-8px) rotate(-6deg); } }
+  .sc-top { display: flex; align-items: center; gap: 12px; }
+  .sc-ab { font: 700 1.3rem 'Fredoka'; background: var(--sun); border: 2.5px solid var(--line); border-radius: 12px; padding: 4px 10px; box-shadow: 3px 3px 0 var(--ink); }
+  .sc-top h3 { font-size: 1.5rem; line-height: 1.1; }
+  .rows { margin-top: 14px; display: grid; gap: 8px; }
+  .row { display: grid; grid-template-columns: 26px 1fr auto; gap: 8px; align-items: center; border: 2px solid var(--line); border-radius: 12px; padding: 7px 10px; }
+  .row .e { font-size: 1.15rem; }
+  .row .k { font-weight: 800; font-size: .9rem; }
+  .row .k small { display: block; color: var(--muted); font-weight: 700; font-size: .76rem; line-height: 1.2; }
+  .row .v { font: 700 1.02rem 'Fredoka'; text-align: right; white-space: nowrap; }
+  .yn { display: inline-block; font: 700 .72rem 'Nunito'; padding: 1px 8px; border-radius: 999px; border: 2px solid var(--line); margin-right: 6px; vertical-align: 2px; }
+  .yn.no { background: var(--mint); color: #fff; text-shadow: 1px 1px 0 var(--ink); }
+  .yn.yes { background: #ffe1e1; }
+  .note { margin-top: 12px; background: #fff0c9; border: 2px dashed var(--line); border-radius: 12px; padding: 10px 12px; font-weight: 700; font-size: .92rem; }
+  .note::before { content: "💡 "; }
+
+  /* ---------- leaderboard ---------- */
+  .boards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .board { padding: 14px 16px; border: 2.5px solid var(--line); border-radius: 18px; background: #fff; }
+  .board h4 { font: 700 1.05rem 'Fredoka'; margin-bottom: 8px; }
+  .board ol { list-style: none; display: grid; gap: 6px; }
+  .board li { display: grid; grid-template-columns: 22px 110px 1fr auto; gap: 8px; align-items: center; font-weight: 800; font-size: .88rem; cursor: pointer; }
+  .board li:hover .nm { text-decoration: underline; }
+  .board .n { font-family: 'Fredoka'; color: var(--muted); }
+  .board .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .board .b { height: 12px; border: 2px solid var(--line); border-radius: 999px; transition: width .5s ease, background .4s; }
+  .board .val { font-family: 'Fredoka'; white-space: nowrap; }
+
+  /* ---------- sections ---------- */
+  section.block { margin-top: 56px; }
+  .sec-title { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+  .sec-title h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); }
+  .sec-title .tag { font-weight: 800; background: var(--pink); color: #fff; border: 2.5px solid var(--line); border-radius: 999px; padding: 2px 12px; box-shadow: 3px 3px 0 var(--ink); text-shadow: 1px 1px 0 var(--ink); transform: rotate(-2deg); }
+  .sec-sub { color: var(--muted); font-weight: 700; max-width: 70ch; margin-bottom: 18px; }
+
+  /* game */
+  .game { padding: 22px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 26px; }
+  .pref { display: grid; grid-template-columns: 34px 1fr 140px; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 2px dotted #d8d2ea; }
+  .pref:last-child { border-bottom: 0; }
+  .pref .e { font-size: 1.5rem; }
+  .pref .k { font-weight: 800; }
+  .pref .k small { display: block; color: var(--muted); font-weight: 700; font-size: .8rem; }
+  .hearts { display: flex; gap: 4px; justify-content: flex-end; }
+  .hearts button { font-size: 1.35rem; background: none; border: 0; cursor: pointer; filter: grayscale(1) opacity(.35); transition: transform .12s, filter .12s; line-height: 1; }
+  .hearts button.on { filter: none; }
+  .hearts button:hover { transform: scale(1.2); }
+  .podium { display: grid; gap: 12px; align-content: start; }
+  .podium .hint { color: var(--muted); font-weight: 800; text-align: center; padding: 30px 0; }
+  .medal { display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; align-items: center; border: 2.5px solid var(--line); border-radius: 16px; padding: 10px 14px; box-shadow: var(--shadow); cursor: pointer; animation: pop .45s cubic-bezier(.2,1.6,.4,1) both; }
+  .medal:nth-child(1) { background: #fff0c9; }
+  .medal:nth-child(2) { background: #eef0ff; animation-delay: .08s; }
+  .medal:nth-child(3) { background: #ffe9dc; animation-delay: .16s; }
+  .medal .m { font-size: 2.2rem; text-align: center; }
+  .medal h4 { font: 700 1.2rem 'Fredoka'; }
+  .medal p { font-size: .84rem; color: var(--muted); font-weight: 700; }
+  .medal .pts { font: 700 1.3rem 'Fredoka'; }
+  @keyframes pop { from { transform: scale(.6); opacity: 0; } }
+  .reset { margin-top: 12px; }
+
+  /* big ideas */
+  .ideas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .idea { padding: 20px; }
+  .idea .num { font: 700 2.6rem 'Fredoka'; line-height: 1; color: var(--coral); -webkit-text-stroke: 1.5px var(--ink); text-shadow: 3px 3px 0 var(--ink); }
+  .idea h3 { font-size: 1.3rem; margin: 10px 0 6px; }
+  .idea p { font-weight: 600; color: #3d375f; }
+  .idea:nth-child(2) .num { color: var(--sky); }
+  .idea:nth-child(3) .num { color: var(--mint); }
+  .idea:nth-child(4) .num { color: var(--sun); }
+  .idea:nth-child(5) .num { color: var(--grape); }
+  .idea:nth-child(6) .num { color: var(--pink); }
+
+  .vs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 18px; }
+  .vs .card { padding: 14px 16px; }
+  .vs h4 { font: 700 1.15rem 'Fredoka'; }
+  .vs ul { list-style: none; margin-top: 6px; font-weight: 700; font-size: .9rem; display: grid; gap: 3px; }
+
+  .talk { padding: 22px 24px; background: #eef0ff; }
+  .talk ol { padding-left: 22px; display: grid; gap: 8px; font-weight: 700; }
+  .talk li::marker { font-family: 'Fredoka'; color: var(--grape); }
+
+  /* glossary */
+  .gloss { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+  .gloss div { background: #fff; border: 2.5px solid var(--line); border-radius: 16px; padding: 12px 14px; font-weight: 600; font-size: .93rem; }
+  .gloss b { font-family: 'Fredoka'; font-size: 1.05rem; display: block; }
+
+  footer { margin: 60px 0 40px; font-size: .86rem; color: var(--muted); font-weight: 600; }
+  footer h3 { font-size: 1.1rem; color: var(--ink); margin-bottom: 6px; }
+  footer ul { padding-left: 18px; display: grid; gap: 4px; }
+
+  @media (max-width: 980px) {
+    .stage { grid-template-columns: 1fr; }
+    .statecard { position: static; }
+    .game { grid-template-columns: 1fr; }
+    .ideas { grid-template-columns: 1fr 1fr; }
+    .vs { grid-template-columns: 1fr 1fr; }
+    header.hero { grid-template-columns: 1fr; }
+    .stickers { justify-content: flex-start; max-width: none; }
+  }
+  @media (max-width: 620px) {
+    .wrap { padding: 0 14px; }
+    .boards, .ideas, .vs { grid-template-columns: 1fr; }
+    .board li { grid-template-columns: 22px 96px 1fr auto; }
+    .pref { grid-template-columns: 30px 1fr; }
+    .hearts { grid-column: 1 / -1; justify-content: flex-start; padding-left: 40px; }
+    .lens { font-size: .9rem; padding: 7px 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../">← Fun Projects</a>
+
+  <header class="hero">
+    <div>
+      <span class="kicker">🗺️ A money map for middle schoolers</span>
+      <h1>Pick Your <span class="pop">State!</span></h1>
+      <p class="lede">Every state makes its own rules about <b>taxes</b>. That's the money people pay to run schools, roads, parks and police. Tap the buttons to see the map change, click any state for its report card, then play <b>“Build Your Dream State”</b> below.</p>
+    </div>
+    <div class="stickers" id="stickers"></div>
+  </header>
+
+  <nav class="lenses" id="lenses" aria-label="Choose what the map shows"></nav>
+
+  <div class="stage">
+    <div class="card mapcard">
+      <div class="lens-head">
+        <div>
+          <h2 id="lensTitle"></h2>
+          <p id="lensDesc"></p>
+          <div class="price-pick" id="pricePick"></div>
+        </div>
+      </div>
+      <svg id="map" viewBox="-10 -5 1010 625" role="img" aria-label="Map of the United States"></svg>
+      <div class="legend" id="legend"></div>
+      <div class="boards" id="boards"></div>
+    </div>
+
+    <aside class="card statecard" id="stateCard" aria-live="polite"></aside>
+  </div>
+
+  <!-- ================= GAME ================= -->
+  <section class="block" id="game">
+    <div class="sec-title"><h2>Build Your Dream State</h2><span class="tag">GAME</span></div>
+    <p class="sec-sub">What matters most to <em>you</em>? Give each thing 0 to 3 hearts. Watch how your top 3 changes. There's no single “best” state; it depends on what you care about!</p>
+    <div class="card game">
+      <div id="prefs"></div>
+      <div>
+        <div class="podium" id="podium"></div>
+        <button class="chip reset" id="resetPrefs">↺ Reset hearts</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BIG IDEAS ================= -->
+  <section class="block">
+    <div class="sec-title"><h2>Big Ideas</h2><span class="tag" style="background:var(--sky)">THINK</span></div>
+    <div class="ideas">
+      <div class="card idea"><div class="num">1</div><h3>There's no free lunch</h3><p>States still need money for schools and roads. A state with <b>no income tax</b> usually collects more some other way: sales tax, property tax, or taxes on tourists and oil.</p></div>
+      <div class="card idea"><div class="num">2</div><h3>Every state has property tax</h3><p>Trick question! All 50 states have property tax. It mostly pays for <b>local schools</b>. What changes is the rate: from 0.31% in Hawaii to 1.79% in Illinois.</p></div>
+      <div class="card idea"><div class="num">3</div><h3>Percent ≠ dollars</h3><p>A 1% property tax on a $300,000 house is <b>$3,000 a year</b>. A 7% sales tax on a $100 game is <b>$7</b>. Always turn the percent into dollars!</p></div>
+      <div class="card idea"><div class="num">4</div><h3>Top rate ≠ your rate</h3><p>“Graduated” states tax each slice of income at a higher rate as income goes up. New York's 10.9% top rate only hits income above <b>$25 million</b>. Most people pay much less.</p></div>
+      <div class="card idea"><div class="num">5</div><h3>Different judges, different winners</h3><p>WalletHub says Wyoming is the #1 place to retire. Bankrate picked New Hampshire. They weigh weather, health care and cost differently. <b>Rankings are opinions built from data.</b></p></div>
+      <div class="card idea"><div class="num">6</div><h3>Big economy ≠ rich people</h3><p>GDP is everything a state makes and sells in a year. California is #1 because it has the most people. A small state can still have a high income per person.</p></div>
+    </div>
+
+    <div class="vs" id="vs"></div>
+  </section>
+
+  <section class="block">
+    <div class="sec-title"><h2>Talk About It</h2><span class="tag" style="background:var(--grape)">CLASS</span></div>
+    <div class="card talk">
+      <ol>
+        <li>Texas has no income tax. Find two taxes on the map where Texas is <em>above</em> average. Why might that be?</li>
+        <li>You're buying an iPhone and you live near the Oregon border in Washington. What would you do? Is that fair to Washington?</li>
+        <li>Grandma wants to retire somewhere warm with low taxes. Use the map to pick 3 states for her, and explain your choice.</li>
+        <li>Would you rather pay a <b>high sales tax</b> (everyone pays, even tourists) or a <b>high income tax</b> (people who earn more pay more)? Why?</li>
+        <li>Play the game with your priorities, then trade with a friend. Did you get the same #1? Why not?</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="sec-title"><h2>Word Wall</h2><span class="tag" style="background:var(--leaf)">WORDS</span></div>
+    <div class="gloss">
+      <div><b>Income tax</b>A slice of the money you earn at a job, paid to the state (and the country).</div>
+      <div><b>Flat tax</b>Everyone pays the same percent, no matter how much they earn.</div>
+      <div><b>Graduated tax</b>The percent goes up as income goes up, one “bracket” at a time.</div>
+      <div><b>Sales tax</b>Extra money added at the register when you buy stuff. States and cities can each add some.</div>
+      <div><b>Property tax</b>A yearly tax on the value of a house or land. It pays for local schools, fire departments and parks.</div>
+      <div><b>Tax burden</b>All state and local taxes people pay, as a percent of all income in the state.</div>
+      <div><b>GDP</b>Gross Domestic Product: the total value of everything made and sold in a place in one year.</div>
+      <div><b>Excise tax</b>A tax on one specific thing, like gasoline. It's usually hidden inside the price.</div>
+    </div>
+  </section>
+
+  <footer>
+    <h3>Where the numbers come from</h3>
+    <ul>
+      <li>Income-tax rates (tax year 2026): Tax Foundation, <a href="https://taxfoundation.org/data/all/state/2026-state-tax-data/" target="_blank" rel="noopener">Facts &amp; Figures 2026</a>, Table 11 (as of Mar 23 2026), updated for laws signed later: Georgia 4.99% (<a href="https://gov.georgia.gov/press-releases/2026-05-11/gov-kemp-signs-legislation-lowering-taxes-and-supporting-economic-growth" target="_blank" rel="noopener">HB 463</a>), South Carolina 1.99% / 5.21% (<a href="https://dor.sc.gov/news/information-about-h-4216" target="_blank" rel="noopener">H.4216</a>), Utah 4.45%.</li>
+      <li>Sales-tax rates: Tax Foundation, <a href="https://taxfoundation.org/data/all/state/2026-sales-tax-rates-midyear/" target="_blank" rel="noopener">State and Local Sales Tax Rates, Midyear 2026</a> (July 1 2026). Local rates are population-weighted averages; your town may differ.</li>
+      <li>Property tax (effective rate on owner-occupied homes, 2024), total tax burden (2022) and gas tax (Jan 2026): Tax Foundation, Facts &amp; Figures 2026, Tables 33, 2 and 22.</li>
+      <li>GDP: U.S. Bureau of Economic Analysis, <a href="https://apps.bea.gov/regional/downloadzip.htm" target="_blank" rel="noopener">SAGDP1</a>, current-dollar GDP for 2025 (released Apr 8 2026).</li>
+      <li>Retirement rank: <a href="https://wallethub.com/edu/best-and-worst-states-to-retire/18592" target="_blank" rel="noopener">WalletHub, Best &amp; Worst States to Retire 2026</a> (D.C. not ranked).</li>
+      <li>iPhone prices: Apple U.S. prices after the <a href="https://www.macrumors.com/2026/09/09/apple-raises-iphone-17-prices/" target="_blank" rel="noopener">Sept 9 2026 price change</a>. Price × (1 + average combined sales tax). Doesn't include carrier fees.</li>
+      <li>Map: <a href="https://github.com/topojson/us-atlas" target="_blank" rel="noopener">us-atlas</a> (U.S. Census Bureau boundaries, Albers USA projection). Alaska and Hawaii aren't drawn to scale.</li>
+    </ul>
+    <p style="margin-top:12px">For learning, not tax advice. Real taxes depend on where exactly you live, your income and lots of special rules.</p>
+  </footer>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<script>
+const STATES = /*__DATA__*/;
+const BY = Object.fromEntries(STATES.map(s => [s.ab, s]));
+const US_GDP = 30762099.0; // BEA 2025, $ millions (all states + DC)
+
+/* ---------------- helpers ---------------- */
+const $ = id => document.getElementById(id);
+const pct = (v, d = 2) => (+v).toFixed(d).replace(/\.?0+$/, '') + '%';
+const money = v => '$' + Math.round(v).toLocaleString('en-US');
+const money2 = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const gdpFmt = m => m >= 1e6 ? '$' + (m / 1e6).toFixed(2) + ' trillion' : '$' + Math.round(m / 1e3) + ' billion';
+const gdpShort = m => m >= 1e6 ? '$' + (m / 1e6).toFixed(2) + 'T' : '$' + Math.round(m / 1e3) + 'B';
+const hexToRgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+function mix(stops, t) {
+  t = Math.max(0, Math.min(1, t));
+  const seg = (stops.length - 1) * t, i = Math.min(stops.length - 2, Math.floor(seg)), f = seg - i;
+  const a = hexToRgb(stops[i]), b = hexToRgb(stops[i + 1]);
+  return 'rgb(' + a.map((v, k) => Math.round(v + (b[k] - v) * f)).join(',') + ')';
+}
+const gdpRank = Object.fromEntries([...STATES].filter(s => s.ab !== 'DC').sort((a, b) => b.gdp - a.gdp).map((s, i) => [s.ab, i + 1]));
+const NO_TAX = '#20c9a6';
+
+/* ---------------- iPhone price picker ---------------- */
+const PHONES = [
+  { k: 'iPhone 17e', p: 699 },
+  { k: 'iPhone 17', p: 899 },
+  { k: 'iPhone 18 Pro', p: 1199 },
+];
+let phonePrice = 899;
+const phoneCost = s => phonePrice * (1 + s.sl / 100);
+
+/* ---------------- lenses ---------------- */
+const LENSES = [
+  { id: 'inc', e: '💵', name: 'Income Tax', color: '#ff6b6b',
+    title: 'Does the state tax your paycheck?',
+    desc: 'Mint states have no state income tax on wages. Everywhere else is shaded by the top rate: darker means a bigger slice for the richest earners.',
+    val: s => s.inc ?? 0, none: s => s.inc == null,
+    fill: s => s.inc == null ? NO_TAX : mix(['#fff1c7', '#ffb35c', '#ff6b6b', '#b0206a'], s.inc / 13.3),
+    fmt: s => s.inc == null ? 'None 🎉' : pct(s.inc) + (s.kind === 'flat' ? ' flat' : ' top rate'),
+    legend: () => ramp(['#fff1c7', '#ffb35c', '#ff6b6b', '#b0206a'], '2.5%', '13.3%') + sw(NO_TAX, 'No income tax 🎉'),
+    low: 'Lowest top rates', high: 'Highest top rates', lowIsGood: true },
+  { id: 'sales', e: '🛒', name: 'Sales Tax', color: '#7b5cff',
+    title: 'How much extra at the checkout?',
+    desc: 'Combined state + average local sales tax. Mint states have none, so the price tag is the price you pay!',
+    val: s => s.sl, none: s => s.sl === 0,
+    fill: s => s.sl === 0 ? NO_TAX : mix(['#efe9ff', '#b39cff', '#7b5cff', '#3b1d9e'], (s.sl - 1.8) / (10.13 - 1.8)),
+    fmt: s => s.sl === 0 ? 'None 🎉' : pct(s.sl) + (s.st === 0 ? ' (local only)' : ''),
+    legend: () => ramp(['#efe9ff', '#b39cff', '#7b5cff', '#3b1d9e'], '1.8%', '10.1%') + sw(NO_TAX, 'No sales tax 🎉'),
+    low: 'Cheapest checkout', high: 'Priciest checkout', lowIsGood: true },
+  { id: 'prop', e: '🏠', name: 'Property Tax', color: '#3fa7ff',
+    title: 'The yearly tax on owning a home',
+    desc: 'Trick question: every state has property tax! The shade shows the effective rate. At 1%, a $300,000 house pays $3,000 a year.',
+    val: s => s.prop,
+    fill: s => mix(['#e6f4ff', '#8fcaff', '#3fa7ff', '#0b4f9c'], (s.prop - 0.31) / (1.79 - 0.31)),
+    fmt: s => pct(s.prop) + ' ≈ ' + money(s.prop * 3000) + '/yr',
+    legend: () => ramp(['#e6f4ff', '#8fcaff', '#3fa7ff', '#0b4f9c'], '0.31%', '1.79%') + '<span class="swatch">🏠 = $300k home</span>',
+    low: 'Lowest property tax', high: 'Highest property tax', lowIsGood: true },
+  { id: 'phone', e: '📱', name: 'iPhone Price', color: '#ff5fa2',
+    title: 'What does an iPhone really cost?',
+    desc: 'Apple charges the same price everywhere. Sales tax changes what you pay at the register. Pick a phone:',
+    val: s => phoneCost(s),
+    fill: s => s.sl === 0 ? NO_TAX : mix(['#ffe6f1', '#ff9cc7', '#ff5fa2', '#a3125a'], s.sl / 10.13),
+    fmt: s => money2(phoneCost(s)),
+    legend: () => ramp(['#ffe6f1', '#ff9cc7', '#ff5fa2', '#a3125a'], money(phonePrice), money(phonePrice * 1.1013)) + sw(NO_TAX, 'Pay just ' + money(phonePrice) + ' 🎉'),
+    low: 'Cheapest iPhone', high: 'Most expensive iPhone', lowIsGood: true },
+  { id: 'retire', e: '🏖️', name: 'Best to Retire', color: '#ffc93c',
+    title: 'Where should Grandma retire?',
+    desc: "WalletHub's 2026 ranking looks at 46 things, like cost of living, health care and fun activities. #1 is the best.",
+    val: s => s.ret ?? 99,
+    fill: s => s.ret == null ? '#d9d6e6' : mix(['#ffb700', '#ffe07a', '#fff4d1', '#e4e0ee'], (s.ret - 1) / 49),
+    fmt: s => s.ret == null ? 'Not ranked' : '#' + s.ret + ' of 50',
+    legend: () => ramp(['#ffb700', '#ffe07a', '#fff4d1', '#e4e0ee'], '#1 🏆', '#50') + sw('#d9d6e6', 'D.C. not ranked'),
+    low: 'Top 5 for retirement', high: 'Bottom 5 for retirement', lowIsGood: true, skip: s => s.ret == null },
+  { id: 'gdp', e: '🏭', name: 'GDP', color: '#36b24a',
+    title: "How big is each state's economy?",
+    desc: 'GDP in 2025: the value of everything made and sold in the state. Together, the states and D.C. made $30.76 trillion!',
+    val: s => s.gdp,
+    fill: s => mix(['#eefbe6', '#a6e38a', '#36b24a', '#0e5a2a'], (Math.log10(s.gdp) - 4.65) / (6.65 - 4.65)),
+    fmt: s => gdpFmt(s.gdp),
+    legend: () => ramp(['#eefbe6', '#a6e38a', '#36b24a', '#0e5a2a'], '$48B', '$4.25T'),
+    low: 'Smallest economies', high: 'Biggest economies', lowIsGood: false, skip: s => s.ab === 'DC' },
+  { id: 'burd', e: '🧾', name: 'All Taxes', color: '#ff8a3d',
+    title: 'Adding it all up: total tax burden',
+    desc: 'All state and local taxes together, as a share of the income people in the state earn (2022). This is the fairest way to compare total taxes.',
+    val: s => s.burd,
+    fill: s => mix(['#fff3e3', '#ffc07a', '#ff8a3d', '#b3400b'], (s.burd - 4.6) / (15.9 - 4.6)),
+    fmt: s => pct(s.burd, 1) + ' of income',
+    legend: () => ramp(['#fff3e3', '#ffc07a', '#ff8a3d', '#b3400b'], '4.6%', '15.9%'),
+    low: 'Lightest total taxes', high: 'Heaviest total taxes', lowIsGood: true },
+];
+function ramp(stops, a, b) {
+  return `<span class="ramp">${a}<span class="bar" style="background:linear-gradient(90deg,${stops.join(',')})"></span>${b}</span>`;
+}
+const sw = (c, t) => `<span class="swatch"><i style="background:${c}"></i>${t}</span>`;
+
+let lens = LENSES[0];
+let selected = null;
+
+/* ---------------- map ---------------- */
+const SVGNS = 'http://www.w3.org/2000/svg';
+const svg = $('map');
+const tiny = ['VT', 'NH', 'MA', 'RI', 'CT', 'NJ', 'DE', 'MD', 'DC'];
+// callout boxes for the tiny north-east states (x, y in map space)
+const CALLOUT = { VT: [838, 102], NH: [945, 125], MA: [960, 162], RI: [960, 196], CT: [960, 230], NJ: [960, 264], DE: [960, 298], MD: [960, 332], DC: [960, 366] };
+const nodes = {};
+
+function el(tag, attrs, parent) {
+  const n = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  parent && parent.appendChild(n);
+  return n;
+}
+const gStates = el('g', {}, svg), gLabels = el('g', {}, svg), gCo = el('g', {}, svg);
+STATES.forEach(s => {
+  const p = el('path', { d: s.d, class: 'st', tabindex: 0, 'aria-label': s.name }, gStates);
+  nodes[s.ab] = [p];
+  if (!tiny.includes(s.ab)) {
+    const t = el('text', { x: s.c[0], y: s.c[1], class: 'lab' }, gLabels);
+    t.textContent = s.ab;
+  } else {
+    const [x, y] = CALLOUT[s.ab];
+    const g = el('g', { class: 'co', tabindex: 0, 'aria-label': s.name }, gCo);
+    el('line', { x1: s.c[0], y1: s.c[1], x2: x - 16, y2: y }, g);
+    const r = el('rect', { x: x - 16, y: y - 11, width: 32, height: 22, rx: 6 }, g);
+    const t = el('text', { x, y }, g); t.textContent = s.ab;
+    nodes[s.ab].push(r); bind(g, s);
+  }
+  bind(p, s);
+});
+
+function bind(node, s) {
+  node.addEventListener('mousemove', e => showTip(e, s));
+  node.addEventListener('mouseleave', hideTip);
+  node.addEventListener('click', () => select(s.ab));
+  node.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(s.ab); } });
+  node.addEventListener('focus', () => { const r = node.getBoundingClientRect(); showTip({ clientX: r.left + r.width / 2, clientY: r.top }, s); });
+  node.addEventListener('blur', hideTip);
+}
+
+const tip = $('tip');
+function showTip(e, s) {
+  tip.innerHTML = `<b>${s.name}</b>${lens.e} ${lens.fmt(s)}`;
+  const x = Math.min(window.innerWidth - 250, e.clientX + 14);
+  tip.style.left = x + 'px'; tip.style.top = (e.clientY + 16) + 'px';
+  tip.classList.add('on');
+}
+function hideTip() { tip.classList.remove('on'); }
+
+/* ---------------- render ---------------- */
+function paint() {
+  STATES.forEach(s => nodes[s.ab].forEach(n => n.style.fill = lens.fill(s)));
+  $('lensTitle').textContent = lens.e + ' ' + lens.title;
+  $('lensDesc').textContent = lens.desc;
+  $('legend').innerHTML = lens.legend();
+  $('pricePick').classList.toggle('on', lens.id === 'phone');
+  document.querySelectorAll('.lens').forEach(b => b.setAttribute('aria-pressed', b.dataset.id === lens.id));
+  renderBoards();
+  renderCard();
+}
+
+function renderBoards() {
+  const pool = STATES.filter(s => !(lens.skip && lens.skip(s)));
+  const asc = [...pool].sort((a, b) => lens.val(a) - lens.val(b) || a.name.localeCompare(b.name));
+  const best = lens.lowIsGood ? asc.slice(0, 5) : asc.slice(-5).reverse();
+  const worst = lens.lowIsGood ? asc.slice(-5).reverse() : asc.slice(0, 5);
+  const max = Math.max(...pool.map(lens.val)) || 1;
+  const list = (arr, h) => `<div class="board"><h4>${h}</h4><ol>${arr.map((s, i) => {
+    const w = lens.id === 'retire' ? (51 - s.ret) / 50 : lens.val(s) / max;
+    return `<li data-ab="${s.ab}"><span class="n">${i + 1}</span><span class="nm">${s.name}</span><span class="b" style="width:${Math.max(4, w * 100)}%;background:${lens.fill(s)}"></span><span class="val">${lens.id === 'gdp' ? gdpShort(s.gdp) : lens.fmt(s).replace(/ (top rate|flat|of income|of 50)$/, '').replace(/ ≈.*/, '')}</span></li>`;
+  }).join('')}</ol></div>`;
+  $('boards').innerHTML = list(best, (lens.lowIsGood ? '⭐ ' : '📉 ') + lens.low) + list(worst, (lens.lowIsGood ? '💸 ' : '🚀 ') + lens.high);
+  $('boards').querySelectorAll('li').forEach(li => li.addEventListener('click', () => select(li.dataset.ab)));
+}
+
+function select(ab) {
+  if (selected) nodes[selected].forEach(n => n.parentNode.classList.contains('co') ? n.parentNode.classList.remove('sel') : n.classList.remove('sel'));
+  selected = ab;
+  nodes[ab].forEach(n => n.parentNode.classList.contains('co') ? n.parentNode.classList.add('sel') : n.classList.add('sel'));
+  renderCard();
+  if (window.innerWidth < 980) $('stateCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function yn(has) { return has ? '<span class="yn yes">YES</span>' : '<span class="yn no">NO!</span>'; }
+
+function renderCard() {
+  const c = $('stateCard');
+  if (!selected) {
+    c.innerHTML = `<div class="empty"><span class="big">👆</span>Click any state to see its report card!<br><br><span style="font-weight:700">Try Texas, Oregon, or your own state.</span></div>`;
+    return;
+  }
+  const s = BY[selected];
+  const incLabel = s.inc == null ? 'none on wages' : (s.kind === 'flat' ? 'flat rate' : 'top rate (graduated)');
+  c.innerHTML = `
+    <div class="sc-top"><span class="sc-ab">${s.ab}</span><h3>${s.name}</h3></div>
+    <div class="rows">
+      <div class="row"><span class="e">💵</span><span class="k">Income tax<small>${incLabel}</small></span><span class="v">${yn(s.inc != null)}${s.inc == null ? '' : pct(s.inc)}</span></div>
+      <div class="row"><span class="e">🛒</span><span class="k">Sales tax<small>state ${pct(s.st)} + local avg</small></span><span class="v">${yn(s.sl > 0)}${s.sl > 0 ? pct(s.sl) : ''}</span></div>
+      <div class="row"><span class="e">🏠</span><span class="k">Property tax<small>≈ ${money(s.prop * 3000)}/yr on a $300k home</small></span><span class="v">${yn(true)}${pct(s.prop)}</span></div>
+      <div class="row"><span class="e">📱</span><span class="k">iPhone at checkout<small>${money(phonePrice)} + sales tax</small></span><span class="v">${money2(phoneCost(s))}</span></div>
+      <div class="row"><span class="e">⛽</span><span class="k">Gas tax<small>state tax per gallon</small></span><span class="v">${Math.round(s.gas * 100)}¢</span></div>
+      <div class="row"><span class="e">🧾</span><span class="k">All taxes<small>share of income, 2022</small></span><span class="v">${pct(s.burd, 1)}</span></div>
+      <div class="row"><span class="e">🏖️</span><span class="k">Retirement rank<small>WalletHub 2026</small></span><span class="v">${s.ret == null ? 'n/a' : '#' + s.ret}</span></div>
+      <div class="row"><span class="e">🏭</span><span class="k">GDP 2025<small>${s.ab === 'DC' ? (s.gdp / US_GDP * 100).toFixed(1) + '% of the U.S.' : '#' + gdpRank[s.ab] + ' of 50 · ' + (s.gdp / US_GDP * 100).toFixed(1) + '% of the U.S.'}</small></span><span class="v">${gdpShort(s.gdp)}</span></div>
+    </div>
+    ${s.note ? `<div class="note">${s.note}</div>` : ''}`;
+}
+
+/* ---------------- lens buttons + stickers ---------------- */
+$('lenses').innerHTML = LENSES.map(l => `<button class="lens" data-id="${l.id}" style="--lc:${l.color}" aria-pressed="false"><span class="e">${l.e}</span>${l.name}</button>`).join('');
+$('lenses').addEventListener('click', e => {
+  const b = e.target.closest('.lens'); if (!b) return;
+  lens = LENSES.find(l => l.id === b.dataset.id); paint();
+  history.replaceState(null, '', '#' + lens.id + (selected ? '/' + selected : ''));
+});
+$('pricePick').innerHTML = PHONES.map(p => `<button class="chip" data-p="${p.p}" aria-pressed="${p.p === phonePrice}">${p.k} · $${p.p}</button>`).join('') +
+  `<label class="chip">Your price: $<input id="customPrice" type="number" min="1" max="99999" placeholder="any"></label>`;
+$('pricePick').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  phonePrice = +b.dataset.p; $('customPrice').value = '';
+  $('pricePick').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+  paint();
+});
+$('customPrice').addEventListener('input', e => {
+  const v = +e.target.value; if (!(v > 0)) return;
+  phonePrice = v; $('pricePick').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', false));
+  paint();
+});
+
+const noInc = STATES.filter(s => s.inc == null).length;
+const noSales = STATES.filter(s => s.st === 0).length;
+$('stickers').innerHTML = `
+  <div class="sticker"><big>${noInc}</big>states: no income tax</div>
+  <div class="sticker"><big>${noSales}</big>states: no state sales tax</div>
+  <div class="sticker"><big>50</big>states have property tax!</div>`;
+
+/* ---------------- "no free lunch" comparisons ---------------- */
+const avg = k => STATES.filter(s => s.ab !== 'DC').reduce((t, s) => t + s[k], 0) / 50;
+const AVG = { sl: avg('sl'), prop: avg('prop') };
+$('vs').innerHTML = ['TX', 'WA', 'NH', 'OR'].map(ab => {
+  const s = BY[ab];
+  const line = (lab, v, a, f) => `<li>${v > a ? '⬆️' : '⬇️'} ${lab}: ${f(v)} <span style="color:var(--muted)">(avg ${f(a)})</span></li>`;
+  return `<div class="card"><h4>${s.name}</h4><ul>
+    <li>${s.inc == null ? '✅ No income tax' : '💵 Income tax up to ' + pct(s.inc)}</li>
+    ${s.sl === 0 ? '<li>✅ No sales tax</li>' : line('Sales tax', s.sl, AVG.sl, v => pct(v))}
+    ${line('Property tax', s.prop, AVG.prop, v => pct(v))}
+  </ul></div>`;
+}).join('');
+
+/* ================= GAME: Build Your Dream State ================= */
+const PREFS = [
+  { id: 'inc', e: '💵', k: 'Keep my paycheck', d: 'low or no income tax' },
+  { id: 'sales', e: '🛒', k: 'Cheap shopping', d: 'low sales tax' },
+  { id: 'prop', e: '🏠', k: 'Cheap to own a home', d: 'low property tax' },
+  { id: 'burd', e: '🧾', k: 'Low taxes overall', d: 'small total tax burden' },
+  { id: 'retire', e: '🏖️', k: 'Great for Grandma', d: 'high retirement rank' },
+  { id: 'gdp', e: '🏭', k: 'Big economy', d: 'lots of businesses & jobs' },
+];
+const hearts = Object.fromEntries(PREFS.map(p => [p.id, 0]));
+
+// good(s, id) → 0..1, where 1 = the best state in the country for that thing
+const RAW = {
+  inc: s => s.inc ?? 0, sales: s => s.sl, prop: s => s.prop, burd: s => s.burd,
+  retire: s => s.ret, gdp: s => Math.log10(s.gdp),
+};
+const PLAYERS = STATES.filter(s => s.ab !== 'DC');
+const RANGE = Object.fromEntries(Object.entries(RAW).map(([k, f]) => {
+  const v = PLAYERS.map(f); return [k, [Math.min(...v), Math.max(...v)]];
+}));
+function good(s, id) {
+  const [lo, hi] = RANGE[id], t = (RAW[id](s) - lo) / (hi - lo);
+  return id === 'gdp' ? t : 1 - t;   // lower is better for taxes & rank
+}
+
+/**
+ * How well does state `s` match the player's hearts?
+ * Returns a number from 0 to 100 (100 = perfect match).
+ *   hearts = { inc: 0-3, sales: 0-3, prop: 0-3, burd: 0-3, retire: 0-3, gdp: 0-3 }
+ *   good(s, id) = 0..1 (1 = best in the U.S. for that thing)
+ */
+function matchScore(s, hearts) {
+  // Weighted average: each heart counts as one vote for that category.
+  let total = 0, weight = 0;
+  for (const id in hearts) {
+    total += hearts[id] * good(s, id);
+    weight += hearts[id];
+  }
+  return weight ? (total / weight) * 100 : 0;
+}
+
+function renderPrefs() {
+  $('prefs').innerHTML = PREFS.map(p => `
+    <div class="pref"><span class="e">${p.e}</span><span class="k">${p.k}<small>${p.d}</small></span>
+      <span class="hearts" data-id="${p.id}">${[1, 2, 3].map(n => `<button data-n="${n}" class="${hearts[p.id] >= n ? 'on' : ''}" aria-label="${p.k}: ${n} heart${n > 1 ? 's' : ''}">❤️</button>`).join('')}</span>
+    </div>`).join('');
+}
+$('prefs').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const id = b.parentNode.dataset.id, n = +b.dataset.n;
+  hearts[id] = hearts[id] === n ? n - 1 : n;   // tap the same heart again to lower it
+  renderPrefs(); renderPodium();
+});
+$('resetPrefs').addEventListener('click', () => { PREFS.forEach(p => hearts[p.id] = 0); renderPrefs(); renderPodium(); });
+
+function renderPodium() {
+  if (!Object.values(hearts).some(Boolean)) {
+    $('podium').innerHTML = `<div class="hint">❤️ Give some hearts to see your top 3 states!</div>`;
+    return;
+  }
+  const ranked = PLAYERS.map(s => ({ s, score: matchScore(s, hearts) })).sort((a, b) => b.score - a.score).slice(0, 3);
+  const why = s => PREFS.filter(p => hearts[p.id]).sort((a, b) => good(s, b.id) - good(s, a.id)).slice(0, 2).map(p => p.e + ' ' + p.k.toLowerCase()).join(' · ');
+  $('podium').innerHTML = ranked.map(({ s, score }, i) => `
+    <div class="medal" data-ab="${s.ab}"><span class="m">${['🥇', '🥈', '🥉'][i]}</span>
+      <div><h4>${s.name}</h4><p>Strong at: ${why(s)}</p></div><span class="pts">${Math.round(score)}</span></div>`).join('');
+  $('podium').querySelectorAll('.medal').forEach(m => m.addEventListener('click', () => { select(m.dataset.ab); window.scrollTo({ top: 0, behavior: 'smooth' }); }));
+}
+
+// deep links: #phone, #retire/FL …
+const [hl, hs] = decodeURIComponent(location.hash.slice(1)).split('/');
+if (LENSES.some(l => l.id === hl)) lens = LENSES.find(l => l.id === hl);
+renderPrefs(); renderPodium(); paint();
+if (hs && BY[hs.toUpperCase()]) select(hs.toUpperCase());
+</script>
+</body>
+</html>

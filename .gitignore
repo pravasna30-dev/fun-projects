@@ -53,3 +53,12 @@ worldcup/ne_50m_raw.geojson
 worldcup/*.png
 worldcup/_check.js
 worldcup/data_blob.json
+states/states_albers_raw.json
+states/*.png
+states/_check.js
+states/*.pdf
+states/sagdp*
+states/gdp_fred.txt
+states/census_*.json
+states/_probe.html
+states/_frame.html
