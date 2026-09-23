@@ -37,36 +37,37 @@
   }
   h1, h2, h3, .display { font-family: 'Fredoka', 'Nunito', sans-serif; letter-spacing: -.01em; }
   a { color: var(--grape); }
-  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+  .wrap { max-width: 1760px; margin: 0 auto; padding: 0 20px; }
 
   /* ---------- header ---------- */
-  .back { display: inline-block; margin-top: 18px; font-weight: 800; font-size: .9rem; color: var(--muted); text-decoration: none; }
+  .topline { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .back { display: inline-block; font-weight: 800; font-size: .9rem; color: var(--muted); text-decoration: none; }
   .back:hover { color: var(--ink); }
-  header.hero { padding: 26px 0 8px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+  header.hero { padding: 12px 0 0; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: end; }
   .kicker {
     display: inline-block; background: var(--sun); border: 2.5px solid var(--line); border-radius: 999px;
     padding: 3px 14px; font-weight: 800; font-size: .82rem; box-shadow: 3px 3px 0 var(--ink); transform: rotate(-2deg);
   }
-  h1 { font-size: clamp(2.3rem, 6vw, 4.2rem); line-height: 1; margin: 16px 0 12px; font-weight: 700; }
+  h1 { font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1; margin: 8px 0 4px; font-weight: 700; }
   h1 .pop { color: var(--coral); display: inline-block; transform: rotate(-3deg); text-shadow: 3px 3px 0 var(--ink); -webkit-text-stroke: 1.5px var(--ink); }
-  .lede { font-size: 1.12rem; max-width: 62ch; color: var(--muted); font-weight: 700; }
+  .lede { font-size: 1rem; max-width: 80ch; color: var(--muted); font-weight: 700; }
   .lede b { color: var(--ink); }
-  .stickers { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; max-width: 330px; }
+  .stickers { display: flex; gap: 10px; flex-wrap: nowrap; justify-content: flex-end; }
   .sticker {
     background: var(--paper); border: 2.5px solid var(--line); border-radius: 14px; box-shadow: var(--shadow);
-    padding: 8px 12px; font-weight: 800; font-size: .86rem; text-align: center; min-width: 96px;
+    padding: 5px 10px; font-weight: 800; font-size: .74rem; text-align: center; min-width: 88px; line-height: 1.2;
   }
-  .sticker big { display: block; font-family: 'Fredoka'; font-size: 1.7rem; line-height: 1.05; }
+  .sticker big { display: block; font-family: 'Fredoka'; font-size: 1.35rem; line-height: 1.05; }
   .sticker:nth-child(1) { transform: rotate(2deg); background: #dff9f1; }
   .sticker:nth-child(2) { transform: rotate(-2deg); background: #fff0c9; }
   .sticker:nth-child(3) { transform: rotate(1.5deg); background: #ffe1ec; }
 
   /* ---------- lens tabs ---------- */
-  .lenses { display: flex; gap: 10px; flex-wrap: wrap; margin: 26px 0 14px; }
+  .lenses { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 12px; }
   .lens {
     font: 700 1rem 'Fredoka', sans-serif; color: var(--ink); cursor: pointer;
     background: var(--paper); border: 2.5px solid var(--line); border-radius: 14px;
-    padding: 9px 14px; box-shadow: var(--shadow); transition: transform .12s, box-shadow .12s, background .15s;
+    padding: 6px 12px; box-shadow: var(--shadow); transition: transform .12s, box-shadow .12s, background .15s;
     display: inline-flex; align-items: center; gap: 7px;
   }
   .lens:hover { transform: translate(-1px,-2px); box-shadow: 5px 6px 0 var(--ink); }
@@ -75,14 +76,15 @@
   .lens .e { font-size: 1.2rem; text-shadow: none; }
 
   /* ---------- main grid ---------- */
-  .stage { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 22px; align-items: start; }
+  .stage { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: stretch; height: var(--stage-h, auto); }
   .card {
     background: var(--paper); border: 2.5px solid var(--line); border-radius: 22px; box-shadow: 6px 6px 0 var(--ink);
   }
-  .mapcard { padding: 18px 18px 12px; position: relative; }
+  .mapcard { padding: 12px 16px 10px; position: relative; display: flex; flex-direction: column; min-height: 0; }
+  .mapbox { flex: 1; min-height: 0; display: flex; }
   .lens-head { display: flex; gap: 14px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
-  .lens-head h2 { font-size: 1.6rem; line-height: 1.1; }
-  .lens-head p { color: var(--muted); font-weight: 700; max-width: 60ch; margin-top: 4px; }
+  .lens-head h2 { font-size: 1.35rem; line-height: 1.1; }
+  .lens-head p { color: var(--muted); font-weight: 700; margin-top: 2px; font-size: .92rem; }
   .price-pick { display: none; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
   .price-pick.on { display: flex; }
   .chip {
@@ -92,7 +94,7 @@
   .chip[aria-pressed="true"] { background: var(--ink); color: #fff; }
   .chip input { width: 70px; border: 0; font: inherit; background: transparent; color: inherit; outline: none; }
 
-  svg#map { width: 100%; height: auto; display: block; margin-top: 8px; overflow: visible; }
+  svg#map { width: 100%; height: 100%; display: block; overflow: visible; }
   .st { stroke: var(--ink); stroke-width: 1.1; stroke-linejoin: round; cursor: pointer; transition: fill .45s ease, filter .15s; }
   .st:hover, .st.sel { stroke-width: 2.6; filter: drop-shadow(2px 2px 0 rgba(31,26,61,.55)); }
   .st:focus { outline: none; stroke-width: 3; }
@@ -102,9 +104,15 @@
   .co line { stroke: var(--ink); stroke-width: .9; stroke-dasharray: 2 2; }
   .co:hover rect, .co.sel rect { stroke-width: 2.6; }
 
-  .legend { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 6px; font-weight: 800; font-size: .86rem; }
+  .legend { display: flex; align-items: center; gap: 8px 14px; flex-wrap: wrap; font-weight: 800; font-size: .84rem; }
+  @media (min-width: 981px) {
+    .legend { position: absolute; right: 16px; bottom: 12px; max-width: 250px; justify-content: flex-end;
+      background: rgba(255,255,255,.88); border: 2px solid var(--line); border-radius: 14px; padding: 8px 10px; }
+    .lens-head > div { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 12px; }
+    .lens-head .price-pick { flex-basis: 100%; margin-top: 6px; }
+  }
   .ramp { display: flex; align-items: center; gap: 8px; }
-  .ramp .bar { width: 180px; height: 14px; border: 2px solid var(--line); border-radius: 999px; }
+  .ramp .bar { width: 130px; height: 14px; border: 2px solid var(--line); border-radius: 999px; }
   .swatch { display: inline-flex; align-items: center; gap: 6px; }
   .swatch i { width: 16px; height: 16px; border: 2px solid var(--line); border-radius: 5px; display: inline-block; }
 
@@ -117,15 +125,15 @@
   .tip b { font-family: 'Fredoka'; font-size: 1rem; display: block; }
 
   /* ---------- state card ---------- */
-  .statecard { padding: 18px; position: sticky; top: 14px; }
+  .statecard { padding: 16px; overflow-y: auto; min-height: 0; }
   .statecard .empty { text-align: center; padding: 30px 8px; color: var(--muted); font-weight: 800; }
   .statecard .empty .big { font-size: 3rem; display: block; animation: bob 2.4s ease-in-out infinite; }
   @keyframes bob { 50% { transform: translateY(-8px) rotate(-6deg); } }
   .sc-top { display: flex; align-items: center; gap: 12px; }
   .sc-ab { font: 700 1.3rem 'Fredoka'; background: var(--sun); border: 2.5px solid var(--line); border-radius: 12px; padding: 4px 10px; box-shadow: 3px 3px 0 var(--ink); }
   .sc-top h3 { font-size: 1.5rem; line-height: 1.1; }
-  .rows { margin-top: 14px; display: grid; gap: 8px; }
-  .row { display: grid; grid-template-columns: 26px 1fr auto; gap: 8px; align-items: center; border: 2px solid var(--line); border-radius: 12px; padding: 7px 10px; }
+  .rows { margin-top: 12px; display: grid; gap: 6px; }
+  .row { display: grid; grid-template-columns: 26px 1fr auto; gap: 8px; align-items: center; border: 2px solid var(--line); border-radius: 12px; padding: 5px 10px; }
   .row .e { font-size: 1.15rem; }
   .row .k { font-weight: 800; font-size: .9rem; }
   .row .k small { display: block; color: var(--muted); font-weight: 700; font-size: .76rem; line-height: 1.2; }
@@ -137,7 +145,7 @@
   .note::before { content: "💡 "; }
 
   /* ---------- leaderboard ---------- */
-  .boards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .boards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
   .board { padding: 14px 16px; border: 2.5px solid var(--line); border-radius: 18px; background: #fff; }
   .board h4 { font: 700 1.05rem 'Fredoka'; margin-bottom: 8px; }
   .board ol { list-style: none; display: grid; gap: 6px; }
@@ -209,9 +217,101 @@
   footer h3 { font-size: 1.1rem; color: var(--ink); margin-bottom: 6px; }
   footer ul { padding-left: 18px; display: grid; gap: 4px; }
 
+  /* ---------- compare tray + head-to-head ---------- */
+  body { padding-bottom: 96px; }
+  svg#map, .board li, .medal, .sc-ab { user-select: none; -webkit-user-select: none; }
+  [data-drag] { cursor: grab; }
+  body.dragging, body.dragging * { cursor: grabbing !important; user-select: none; }
+  .dock {
+    position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 40;
+    display: flex; align-items: center; gap: 10px; background: #fff; border: 2.5px solid var(--line);
+    border-radius: 18px; box-shadow: 5px 5px 0 var(--ink); padding: 8px 10px; max-width: calc(100vw - 16px);
+    transition: transform .15s, background .15s;
+  }
+  .dock.hot { background: #fff0c9; transform: translateX(-50%) scale(1.05); }
+  .dock.shake { animation: shake .45s; }
+  @keyframes shake { 20%, 60% { transform: translateX(calc(-50% - 8px)); } 40%, 80% { transform: translateX(calc(-50% + 8px)); } }
+  .dock-lab { font: 700 1.05rem 'Fredoka'; display: flex; flex-direction: column; line-height: 1.1; white-space: nowrap; }
+  .dock-lab small { font: 800 .72rem 'Nunito'; color: var(--muted); }
+  .slots { display: flex; gap: 8px; }
+  .slot {
+    width: 132px; height: 46px; border: 2.5px dashed var(--sc); border-radius: 12px; background: #fff;
+    display: flex; align-items: center; gap: 6px; padding: 0 6px 0 8px; font-weight: 800; font-size: .85rem;
+    transition: transform .12s, background .12s;
+  }
+  .slot:not(.empty) { border-style: solid; background: color-mix(in srgb, var(--sc) 20%, #fff); }
+  .slot.over { transform: scale(1.08); background: color-mix(in srgb, var(--sc) 40%, #fff); }
+  .slot b { font: 700 1rem 'Fredoka'; background: var(--sc); color: #fff; text-shadow: 1px 1px 0 var(--ink); border: 2px solid var(--line); border-radius: 8px; padding: 0 5px; }
+  .slot span { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .slot .x { border: 0; background: none; font: 800 1.1rem 'Nunito'; cursor: pointer; color: var(--ink); padding: 0 2px; }
+  .slot select { width: 100%; border: 0; background: transparent; font: 800 .82rem 'Nunito'; color: var(--muted); cursor: pointer; outline: none; }
+  .dock-go {
+    font: 700 .95rem 'Fredoka'; background: var(--coral); color: #fff; text-shadow: 1px 1px 0 var(--ink);
+    border: 2.5px solid var(--line); border-radius: 12px; padding: 9px 12px; box-shadow: 3px 3px 0 var(--ink); cursor: pointer; white-space: nowrap;
+  }
+  .dock-go:disabled { background: #e7e4ef; color: #9a95b0; text-shadow: none; box-shadow: none; cursor: default; }
+  .ghost {
+    position: fixed; z-index: 60; pointer-events: none; display: none; transform: translate(-50%, -130%) rotate(-4deg);
+    background: var(--sun); border: 2.5px solid var(--line); border-radius: 12px; padding: 4px 10px;
+    font: 700 1rem 'Fredoka'; box-shadow: 3px 3px 0 var(--ink); white-space: nowrap;
+  }
+  .ghost.on { display: block; }
+  .pin circle { stroke: var(--ink); stroke-width: 2; }
+  .pin text { font: 700 12px 'Fredoka'; fill: #fff; text-anchor: middle; dominant-baseline: central; paint-order: stroke; stroke: var(--ink); stroke-width: 2px; }
+  .pin { pointer-events: none; }
+  .addcmp { margin-top: 12px; width: 100%; padding: 8px; font-size: .95rem; box-shadow: 3px 3px 0 var(--ink); }
+  .addcmp[disabled] { opacity: .55; box-shadow: none; cursor: default; }
+
+  .cmp-empty { padding: 22px; text-align: center; }
+  .cmp-empty .how { font-weight: 800; font-size: 1.05rem; }
+  .cmp-empty .hand { display: inline-block; font-size: 1.8rem; animation: slide 1.8s ease-in-out infinite; }
+  @keyframes slide { 50% { transform: translate(14px, 6px) rotate(8deg); } }
+  .cmp-empty p { color: var(--muted); font-weight: 700; margin: 14px 0 10px; }
+  .ex { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .ex .chip { box-shadow: 3px 3px 0 var(--ink); padding: 7px 14px; font-size: .92rem; }
+
+  .fighters { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 34px; }
+  .fighter {
+    position: relative; text-align: center; border: 2.5px solid var(--line); border-radius: 20px; padding: 14px 10px;
+    background: color-mix(in srgb, var(--sc) 22%, #fff); box-shadow: var(--shadow);
+  }
+  .fighter:not(:last-child)::after {
+    content: 'VS'; position: absolute; right: -31px; top: 50%; transform: translateY(-50%) rotate(-8deg); z-index: 2;
+    font: 700 1.05rem 'Fredoka'; background: var(--ink); color: var(--sun); border-radius: 999px; padding: 2px 6px;
+  }
+  .fighter .ab { font: 700 1.2rem 'Fredoka'; background: var(--sc); color: #fff; text-shadow: 1px 1px 0 var(--ink); border: 2.5px solid var(--line); border-radius: 10px; padding: 1px 8px; display: inline-block; }
+  .fighter h3 { font-size: 1.35rem; margin: 6px 0 2px; line-height: 1.1; }
+  .fighter .wins { font-weight: 800; font-size: .9rem; }
+  .fighter .x { position: absolute; top: 6px; right: 10px; border: 0; background: none; font: 800 1.1rem 'Nunito'; cursor: pointer; color: var(--muted); }
+  .cmp-wrap { overflow-x: auto; margin-top: 18px; }
+  table.cmp { width: 100%; border-collapse: separate; border-spacing: 0 7px; font-weight: 800; }
+  .cmp th { font: 700 .82rem 'Fredoka'; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; padding: 0 10px; }
+  .cmp td { background: #fff; border-top: 2px solid var(--line); border-bottom: 2px solid var(--line); padding: 9px 10px; text-align: center; white-space: nowrap; }
+  .cmp td:first-child { border-left: 2px solid var(--line); border-radius: 12px 0 0 12px; text-align: left; }
+  .cmp td:last-child { border-right: 2px solid var(--line); border-radius: 0 12px 12px 0; }
+  .cmp td.win { background: #d9f7ee; }
+  .cmp td.win::after { content: ' 🏆'; }
+  .cmp td.gap { font-family: 'Fredoka'; color: var(--grape); }
+  .cmp tr.info td { background: #faf8ff; }
+  .cmp tr.info td:first-child small { display: block; color: var(--muted); font-size: .72rem; }
+  .pc { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 16px; margin-top: 18px; }
+  .pc > div { background: #fff; border: 2.5px solid var(--line); border-top: 10px solid var(--sc); border-radius: 18px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .pc h4 { font: 700 1.15rem 'Fredoka'; margin-bottom: 8px; }
+  .pc ul { list-style: none; display: grid; gap: 8px; }
+  .pc li { font-weight: 800; font-size: .92rem; padding-left: 26px; position: relative; }
+  .pc li::before { position: absolute; left: 0; }
+  .pc li.pro::before { content: '👍'; }
+  .pc li.con::before { content: '👎'; }
+  .pc li small { display: block; color: var(--muted); font-weight: 700; font-size: .8rem; }
+  .pc .none { color: var(--muted); font-weight: 700; font-size: .9rem; }
+  .ties { margin-top: 14px; font-weight: 800; color: var(--muted); }
+  .verdict { margin-top: 16px; background: #ffe1ec; border: 2px dashed var(--line); border-radius: 14px; padding: 12px 16px; font-weight: 800; }
+
   @media (max-width: 980px) {
-    .stage { grid-template-columns: 1fr; }
-    .statecard { position: static; }
+    .stage { grid-template-columns: 1fr; height: auto; }
+    .statecard { overflow: visible; }
+    svg#map { height: auto; }
+    .stickers { flex-wrap: wrap; }
     .game { grid-template-columns: 1fr; }
     .ideas { grid-template-columns: 1fr 1fr; }
     .vs { grid-template-columns: 1fr 1fr; }
@@ -225,19 +325,27 @@
     .pref { grid-template-columns: 30px 1fr; }
     .hearts { grid-column: 1 / -1; justify-content: flex-start; padding-left: 40px; }
     .lens { font-size: .9rem; padding: 7px 10px; }
+    .dock { gap: 6px; padding: 6px; bottom: 8px; }
+    .dock-lab, .slot span { display: none; }
+    .slot { width: 74px; justify-content: space-between; }
+    .dock-go { padding: 8px; font-size: .85rem; }
+    .fighters { gap: 22px; }
+    .fighter:not(:last-child)::after { right: -24px; font-size: .8rem; }
+    .fighter h3 { font-size: 1rem; }
+    .pc { grid-template-columns: 1fr; }
+    table.cmp { font-size: .8rem; }
+    .cmp td { padding: 7px 6px; }
   }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="../">← Fun Projects</a>
-
   <header class="hero">
     <div>
-      <span class="kicker">🗺️ A money map for middle schoolers</span>
+      <div class="topline"><a class="back" href="../">← Fun Projects</a><span class="kicker">🗺️ A money map for middle schoolers</span></div>
       <h1>Pick Your <span class="pop">State!</span></h1>
-      <p class="lede">Every state makes its own rules about <b>taxes</b>. That's the money people pay to run schools, roads, parks and police. Tap the buttons to see the map change, click any state for its report card, then play <b>“Build Your Dream State”</b> below.</p>
+      <p class="lede">Every state makes its own rules about <b>taxes</b>, the money that pays for schools, roads and parks. Pick a button, click a state for its report card, or <b>drag states into 🆚 Compare</b>.</p>
     </div>
     <div class="stickers" id="stickers"></div>
   </header>
@@ -253,13 +361,20 @@
           <div class="price-pick" id="pricePick"></div>
         </div>
       </div>
-      <svg id="map" viewBox="-10 -5 1010 625" role="img" aria-label="Map of the United States"></svg>
+      <div class="mapbox"><svg id="map" viewBox="-10 -5 1010 625" role="img" aria-label="Map of the United States"></svg></div>
       <div class="legend" id="legend"></div>
-      <div class="boards" id="boards"></div>
     </div>
 
     <aside class="card statecard" id="stateCard" aria-live="polite"></aside>
   </div>
+  <div class="boards" id="boards"></div>
+
+  <!-- ================= COMPARE ================= -->
+  <section class="block" id="compare">
+    <div class="sec-title"><h2>Head-to-Head</h2><span class="tag" style="background:var(--coral)">🆚 COMPARE</span></div>
+    <p class="sec-sub">Drag 2 or 3 states from the map into the <b>🆚 Compare</b> tray at the bottom of your screen. On a phone, tap a state and press “Add to compare.” 🏆 marks the winner of each row.</p>
+    <div id="cmpOut"></div>
+  </section>
 
   <!-- ================= GAME ================= -->
   <section class="block" id="game">
@@ -332,6 +447,12 @@
 </div>
 
 <div class="tip" id="tip"></div>
+<div class="dock" id="dock" aria-label="Compare tray">
+  <span class="dock-lab">🆚 Compare<small>drag states here</small></span>
+  <div class="slots" id="slots"></div>
+  <button class="dock-go" id="dockGo" disabled>Go ↓</button>
+</div>
+<div class="ghost" id="ghost"></div>
 
 <script>
 const STATES = /*__DATA__*/;
@@ -445,16 +566,16 @@ function el(tag, attrs, parent) {
   parent && parent.appendChild(n);
   return n;
 }
-const gStates = el('g', {}, svg), gLabels = el('g', {}, svg), gCo = el('g', {}, svg);
+const gStates = el('g', {}, svg), gLabels = el('g', {}, svg), gCo = el('g', {}, svg), gPins = el('g', {}, svg);
 STATES.forEach(s => {
-  const p = el('path', { d: s.d, class: 'st', tabindex: 0, 'aria-label': s.name }, gStates);
+  const p = el('path', { d: s.d, class: 'st', tabindex: 0, 'aria-label': s.name, 'data-drag': s.ab }, gStates);
   nodes[s.ab] = [p];
   if (!tiny.includes(s.ab)) {
     const t = el('text', { x: s.c[0], y: s.c[1], class: 'lab' }, gLabels);
     t.textContent = s.ab;
   } else {
     const [x, y] = CALLOUT[s.ab];
-    const g = el('g', { class: 'co', tabindex: 0, 'aria-label': s.name }, gCo);
+    const g = el('g', { class: 'co', tabindex: 0, 'aria-label': s.name, 'data-drag': s.ab }, gCo);
     el('line', { x1: s.c[0], y1: s.c[1], x2: x - 16, y2: y }, g);
     const r = el('rect', { x: x - 16, y: y - 11, width: 32, height: 22, rx: 6 }, g);
     const t = el('text', { x, y }, g); t.textContent = s.ab;
@@ -491,6 +612,7 @@ function paint() {
   document.querySelectorAll('.lens').forEach(b => b.setAttribute('aria-pressed', b.dataset.id === lens.id));
   renderBoards();
   renderCard();
+  renderCompare();  if (typeof fitStage === 'function') fitStage();
 }
 
 function renderBoards() {
@@ -501,7 +623,7 @@ function renderBoards() {
   const max = Math.max(...pool.map(lens.val)) || 1;
   const list = (arr, h) => `<div class="board"><h4>${h}</h4><ol>${arr.map((s, i) => {
     const w = lens.id === 'retire' ? (51 - s.ret) / 50 : lens.val(s) / max;
-    return `<li data-ab="${s.ab}"><span class="n">${i + 1}</span><span class="nm">${s.name}</span><span class="b" style="width:${Math.max(4, w * 100)}%;background:${lens.fill(s)}"></span><span class="val">${lens.id === 'gdp' ? gdpShort(s.gdp) : lens.fmt(s).replace(/ (top rate|flat|of income|of 50)$/, '').replace(/ ≈.*/, '')}</span></li>`;
+    return `<li data-ab="${s.ab}" data-drag="${s.ab}"><span class="n">${i + 1}</span><span class="nm">${s.name}</span><span class="b" style="width:${Math.max(4, w * 100)}%;background:${lens.fill(s)}"></span><span class="val">${lens.id === 'gdp' ? gdpShort(s.gdp) : lens.fmt(s).replace(/ (top rate|flat|of income|of 50)$/, '').replace(/ ≈.*/, '')}</span></li>`;
   }).join('')}</ol></div>`;
   $('boards').innerHTML = list(best, (lens.lowIsGood ? '⭐ ' : '📉 ') + lens.low) + list(worst, (lens.lowIsGood ? '💸 ' : '🚀 ') + lens.high);
   $('boards').querySelectorAll('li').forEach(li => li.addEventListener('click', () => select(li.dataset.ab)));
@@ -511,7 +633,7 @@ function select(ab) {
   if (selected) nodes[selected].forEach(n => n.parentNode.classList.contains('co') ? n.parentNode.classList.remove('sel') : n.classList.remove('sel'));
   selected = ab;
   nodes[ab].forEach(n => n.parentNode.classList.contains('co') ? n.parentNode.classList.add('sel') : n.classList.add('sel'));
-  renderCard();
+  renderCard(); syncHash();
   if (window.innerWidth < 980) $('stateCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
@@ -526,7 +648,7 @@ function renderCard() {
   const s = BY[selected];
   const incLabel = s.inc == null ? 'none on wages' : (s.kind === 'flat' ? 'flat rate' : 'top rate (graduated)');
   c.innerHTML = `
-    <div class="sc-top"><span class="sc-ab">${s.ab}</span><h3>${s.name}</h3></div>
+    <div class="sc-top"><span class="sc-ab" data-drag="${s.ab}" title="Drag me to the compare tray">${s.ab}</span><h3>${s.name}</h3></div>
     <div class="rows">
       <div class="row"><span class="e">💵</span><span class="k">Income tax<small>${incLabel}</small></span><span class="v">${yn(s.inc != null)}${s.inc == null ? '' : pct(s.inc)}</span></div>
       <div class="row"><span class="e">🛒</span><span class="k">Sales tax<small>state ${pct(s.st)} + local avg</small></span><span class="v">${yn(s.sl > 0)}${s.sl > 0 ? pct(s.sl) : ''}</span></div>
@@ -537,7 +659,8 @@ function renderCard() {
       <div class="row"><span class="e">🏖️</span><span class="k">Retirement rank<small>WalletHub 2026</small></span><span class="v">${s.ret == null ? 'n/a' : '#' + s.ret}</span></div>
       <div class="row"><span class="e">🏭</span><span class="k">GDP 2025<small>${s.ab === 'DC' ? (s.gdp / US_GDP * 100).toFixed(1) + '% of the U.S.' : '#' + gdpRank[s.ab] + ' of 50 · ' + (s.gdp / US_GDP * 100).toFixed(1) + '% of the U.S.'}</small></span><span class="v">${gdpShort(s.gdp)}</span></div>
     </div>
-    ${s.note ? `<div class="note">${s.note}</div>` : ''}`;
+    ${s.note ? `<div class="note">${s.note}</div>` : ''}
+    <button class="chip addcmp" data-add="${s.ab}" ${slots.includes(s.ab) ? 'disabled' : ''}>${slots.includes(s.ab) ? '✓ In the compare tray' : '🆚 Add to compare'}</button>`;
 }
 
 /* ---------------- lens buttons + stickers ---------------- */
@@ -545,7 +668,7 @@ $('lenses').innerHTML = LENSES.map(l => `<button class="lens" data-id="${l.id}" 
 $('lenses').addEventListener('click', e => {
   const b = e.target.closest('.lens'); if (!b) return;
   lens = LENSES.find(l => l.id === b.dataset.id); paint();
-  history.replaceState(null, '', '#' + lens.id + (selected ? '/' + selected : ''));
+  syncHash();
 });
 $('pricePick').innerHTML = PHONES.map(p => `<button class="chip" data-p="${p.p}" aria-pressed="${p.p === phonePrice}">${p.k} · $${p.p}</button>`).join('') +
   `<label class="chip">Your price: $<input id="customPrice" type="number" min="1" max="99999" placeholder="any"></label>`;
@@ -632,9 +755,9 @@ $('prefs').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   const id = b.parentNode.dataset.id, n = +b.dataset.n;
   hearts[id] = hearts[id] === n ? n - 1 : n;   // tap the same heart again to lower it
-  renderPrefs(); renderPodium();
+  renderPrefs(); renderPodium(); renderCompare();
 });
-$('resetPrefs').addEventListener('click', () => { PREFS.forEach(p => hearts[p.id] = 0); renderPrefs(); renderPodium(); });
+$('resetPrefs').addEventListener('click', () => { PREFS.forEach(p => hearts[p.id] = 0); renderPrefs(); renderPodium(); renderCompare(); });
 
 function renderPodium() {
   if (!Object.values(hearts).some(Boolean)) {
@@ -644,16 +767,215 @@ function renderPodium() {
   const ranked = PLAYERS.map(s => ({ s, score: matchScore(s, hearts) })).sort((a, b) => b.score - a.score).slice(0, 3);
   const why = s => PREFS.filter(p => hearts[p.id]).sort((a, b) => good(s, b.id) - good(s, a.id)).slice(0, 2).map(p => p.e + ' ' + p.k.toLowerCase()).join(' · ');
   $('podium').innerHTML = ranked.map(({ s, score }, i) => `
-    <div class="medal" data-ab="${s.ab}"><span class="m">${['🥇', '🥈', '🥉'][i]}</span>
+    <div class="medal" data-ab="${s.ab}" data-drag="${s.ab}"><span class="m">${['🥇', '🥈', '🥉'][i]}</span>
       <div><h4>${s.name}</h4><p>Strong at: ${why(s)}</p></div><span class="pts">${Math.round(score)}</span></div>`).join('');
   $('podium').querySelectorAll('.medal').forEach(m => m.addEventListener('click', () => { select(m.dataset.ab); window.scrollTo({ top: 0, behavior: 'smooth' }); }));
 }
 
-// deep links: #phone, #retire/FL …
-const [hl, hs] = decodeURIComponent(location.hash.slice(1)).split('/');
-if (LENSES.some(l => l.id === hl)) lens = LENSES.find(l => l.id === hl);
-renderPrefs(); renderPodium(); paint();
-if (hs && BY[hs.toUpperCase()]) select(hs.toUpperCase());
+/* ================= COMPARE: drag 2–3 states into the tray ================= */
+const SLOT_C = ['#ff6b6b', '#3fa7ff', '#ffc93c'];
+const slots = [null, null, null];
+const ml = (x, y, up = 'more', down = 'less') => x > y ? up : down;
+const trim = v => v.toFixed(2).replace(/\.?0+$/, '');
+
+// low: true when a smaller number is better. why(a, b) explains a vs b in real-world units.
+const CMP = [
+  { id: 'inc', e: '💵', k: 'Income tax', low: true, v: s => s.inc ?? 0,
+    f: s => s.inc == null ? 'None 🎉' : pct(s.inc) + (s.kind === 'flat' ? ' flat' : ' top'),
+    gap: (hi, lo) => trim(hi - lo) + ' pts', good: 'Smaller income tax', bad: 'Biggest income tax',
+    why: (a, b) => `top earners pay ${money(Math.abs(a.v - b.v) * 10)} ${ml(a.v, b.v)} per $1,000 earned` },
+  { id: 'sales', e: '🛒', k: 'Sales tax', low: true, v: s => s.sl, f: s => s.sl === 0 ? 'None 🎉' : pct(s.sl),
+    gap: (hi, lo) => trim(hi - lo) + ' pts', good: 'Cheaper shopping', bad: 'Priciest shopping',
+    why: (a, b) => `${money2(Math.abs(a.v - b.v))} ${ml(a.v, b.v)} tax on every $100 you spend` },
+  { id: 'phone', e: '📱', k: 'iPhone at checkout', low: true, info: 'follows sales tax', v: phoneCost, f: s => money2(phoneCost(s)),
+    gap: (hi, lo) => money2(hi - lo) },
+  { id: 'prop', e: '🏠', k: 'Property tax', low: true, v: s => s.prop, f: s => pct(s.prop),
+    gap: (hi, lo) => money((hi - lo) * 3000) + '/yr', good: 'Lower property tax', bad: 'Highest property tax',
+    why: (a, b) => `≈ ${money(Math.abs(a.v - b.v) * 3000)} ${ml(a.v, b.v)} a year on a $300k home` },
+  { id: 'gas', e: '⛽', k: 'Gas tax', low: true, v: s => s.gas, f: s => Math.round(s.gas * 100) + '¢/gal',
+    gap: (hi, lo) => Math.round((hi - lo) * 100) + '¢/gal', good: 'Cheaper gas tax', bad: 'Highest gas tax',
+    why: (a, b) => `${money2(Math.abs(a.v - b.v) * 15)} ${ml(a.v, b.v)} per 15-gallon fill-up` },
+  { id: 'burd', e: '🧾', k: 'All taxes', low: true, v: s => s.burd, f: s => pct(s.burd, 1),
+    gap: (hi, lo) => (hi - lo).toFixed(1) + ' pts', good: 'Lighter total taxes', bad: 'Heaviest total taxes',
+    why: (a, b) => `about ${money(Math.abs(a.v - b.v) * 10)} ${ml(a.v, b.v)} in taxes per $1,000 earned` },
+  { id: 'retire', e: '🏖️', k: 'Retirement rank', low: true, v: s => s.ret, f: s => s.ret == null ? 'n/a' : '#' + s.ret,
+    gap: (hi, lo) => (hi - lo) + ' spots', good: 'Better for retirees', bad: 'Worst for retirees here', skip: s => s.ret == null,
+    why: (a, b) => `${Math.abs(a.v - b.v)} spots ${ml(a.v, b.v, 'lower', 'higher')} on WalletHub's list` },
+  { id: 'gdp', e: '🏭', k: 'Economy (GDP)', low: false, v: s => s.gdp, f: s => gdpShort(s.gdp),
+    gap: (hi, lo) => (hi / lo).toFixed(1) + '× bigger', good: 'Bigger economy', bad: 'Smallest economy',
+    why: (a, b) => a.v > b.v ? `${(a.v / b.v).toFixed(1)}× the size — more businesses & jobs` : `${(b.v / a.v).toFixed(1)}× smaller` },
+];
+
+function matchup(group) {
+  const out = group.map(() => ({ pro: [], con: [], wins: 0 })), ties = [];
+  CMP.filter(m => !m.info).forEach(m => {
+    if (m.skip && group.some(m.skip)) return;
+    const vals = group.map(m.v);
+    const best = m.low ? Math.min(...vals) : Math.max(...vals);
+    const worst = m.low ? Math.max(...vals) : Math.min(...vals);
+    if (best === worst) { ties.push(`${m.e} ${m.k} (${m.f(group[0])})`); return; }
+    const bestS = group[vals.indexOf(best)], worstS = group[vals.indexOf(worst)];
+    group.forEach((s, i) => {
+      if (vals[i] === best) {
+        out[i].wins++;
+        out[i].pro.push({ t: `${m.e} ${m.good}: ${m.f(s)} vs ${m.f(worstS)} in ${worstS.name}`, d: m.why({ v: vals[i] }, { v: worst }) });
+      } else if (vals[i] === worst) {
+        out[i].con.push({ t: `${m.e} ${m.bad}: ${m.f(s)} vs ${m.f(bestS)} in ${bestS.name}`, d: m.why({ v: vals[i] }, { v: best }) });
+      }
+    });
+  });
+  return { out, ties };
+}
+
+function addToCompare(ab, at) {
+  const j = slots.indexOf(ab);
+  if (at != null) { if (j >= 0) slots[j] = slots[at]; slots[at] = ab; }
+  else if (j < 0) {
+    const free = slots.indexOf(null);
+    if (free < 0) { const d = $('dock'); d.classList.remove('shake'); void d.offsetWidth; d.classList.add('shake'); return; }
+    slots[free] = ab;
+  }
+  renderCompare(); renderCard();
+}
+function removeFromCompare(i) { slots[i] = null; renderCompare(); renderCard(); }
+
+function renderSlots() {
+  const opts = [...STATES].sort((a, b) => a.name.localeCompare(b.name)).map(s => `<option value="${s.ab}">${s.name}</option>`).join('');
+  $('slots').innerHTML = slots.map((ab, i) => ab
+    ? `<div class="slot" data-slot="${i}" style="--sc:${SLOT_C[i]}"><b>${ab}</b><span>${BY[ab].name}</span><button class="x" data-rm="${i}" aria-label="Remove ${BY[ab].name}">×</button></div>`
+    : `<div class="slot empty" data-slot="${i}" style="--sc:${SLOT_C[i]}"><select data-pick="${i}" aria-label="Pick state ${i + 1}"><option value="">${i === 2 ? '+ 3rd (optional)' : '+ drop a state'}</option>${opts}</select></div>`).join('');
+  $('dockGo').disabled = slots.filter(Boolean).length < 2;
+}
+$('slots').addEventListener('click', e => { const b = e.target.closest('[data-rm]'); if (b) removeFromCompare(+b.dataset.rm); });
+$('slots').addEventListener('change', e => { const s = e.target.closest('[data-pick]'); if (s && s.value) addToCompare(s.value, +s.dataset.pick); });
+$('dockGo').addEventListener('click', () => $('compare').scrollIntoView({ behavior: 'smooth' }));
+$('stateCard').addEventListener('click', e => { const b = e.target.closest('[data-add]'); if (b) addToCompare(b.dataset.add); });
+
+function markMap() {
+  gPins.innerHTML = '';
+  slots.forEach((ab, i) => {
+    if (!ab) return;
+    const s = BY[ab], [x, y] = tiny.includes(ab) ? [CALLOUT[ab][0] - 26, CALLOUT[ab][1]] : [s.c[0], s.c[1] - 17];
+    const g = el('g', { class: 'pin' }, gPins);
+    el('circle', { cx: x, cy: y, r: 10, fill: SLOT_C[i] }, g);
+    el('text', { x, y }, g).textContent = i + 1;
+  });
+}
+
+const EXAMPLES = [['TX', 'CA'], ['WA', 'OR'], ['FL', 'NY', 'WY'], ['NH', 'MA', 'VT']];
+function renderCompare() {
+  renderSlots(); markMap(); syncHash();
+  const group = slots.filter(Boolean).map(ab => BY[ab]);
+  const out = $('cmpOut');
+  if (group.length < 2) {
+    out.innerHTML = `<div class="card cmp-empty">
+      <div class="how"><span class="hand">🫳</span> ${group.length ? `<b>${group[0].name}</b> is in the tray. Add one more state!` : '<b>Drag</b> a state from the map and drop it in the <b>🆚 tray</b> at the bottom.'}</div>
+      <p>Or try a famous matchup:</p>
+      <div class="ex">${EXAMPLES.map(g => `<button class="chip" data-ex="${g.join(',')}">${g.map(a => BY[a].name).join(' 🆚 ')}</button>`).join('')}</div></div>`;
+    out.querySelectorAll('[data-ex]').forEach(b => b.addEventListener('click', () => {
+      slots.fill(null); b.dataset.ex.split(',').forEach((a, i) => slots[i] = a); renderCompare(); renderCard();
+    }));
+    return;
+  }
+  const { out: pc, ties } = matchup(group), n = group.length;
+  const color = s => SLOT_C[slots.indexOf(s.ab)];
+  const scored = CMP.filter(m => !m.info && !(m.skip && group.some(m.skip))).length;
+
+  const rows = CMP.map(m => {
+    const skip = m.skip && group.some(m.skip);
+    const vals = group.map(m.v), hi = Math.max(...vals), lo = Math.min(...vals), best = m.low ? lo : hi;
+    const cells = group.map((s, i) => `<td class="${!skip && hi !== lo && vals[i] === best ? 'win' : ''}">${m.f(s)}</td>`).join('');
+    return `<tr class="${m.info ? 'info' : ''}"><td>${m.e} ${m.k}${m.info ? `<small>${m.info}</small>` : ''}</td>${cells}<td class="gap">${skip ? '—' : hi === lo ? 'tie 🤝' : m.gap(hi, lo)}</td></tr>`;
+  }).join('');
+
+  let verdict;
+  if (Object.values(hearts).some(Boolean)) {
+    const ranked = group.map(s => ({ s, sc: matchScore(s, hearts) })).sort((a, b) => b.sc - a.sc);
+    verdict = `💘 Using your hearts from the game, <b>${ranked[0].s.name}</b> fits you best (${ranked.map(r => r.s.ab + ' ' + Math.round(r.sc)).join(' · ')}).`;
+  } else {
+    const top = Math.max(...pc.map(p => p.wins)), leaders = group.filter((s, i) => pc[i].wins === top);
+    verdict = `${leaders.length > 1 ? '🤝 It\'s a tie on trophies!' : `🏆 <b>${leaders[0].name}</b> wins the most categories.`} But the “best” state depends on what <em>you</em> care about. Give hearts in the game below and this box will pick for you.`;
+  }
+
+  out.innerHTML = `
+    <div class="fighters" style="--n:${n}">${group.map((s, i) => `
+      <div class="fighter" style="--sc:${color(s)}"><button class="x" data-rmab="${s.ab}" aria-label="Remove ${s.name}">×</button>
+        <span class="ab">${s.ab}</span><h3>${s.name}</h3><div class="wins">🏆 ${pc[i].wins} of ${scored} wins</div></div>`).join('')}</div>
+    <div class="cmp-wrap"><table class="cmp">
+      <thead><tr><th></th>${group.map(s => `<th style="color:${color(s)}">${s.ab}</th>`).join('')}<th>${n === 2 ? 'Difference' : 'Biggest gap'}</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>
+    <div class="pc" style="--n:${n}">${group.map((s, i) => `
+      <div style="--sc:${color(s)}"><h4>${s.name}</h4><ul>
+        ${pc[i].pro.map(p => `<li class="pro">${p.t}<small>${p.d}</small></li>`).join('')}
+        ${pc[i].con.map(p => `<li class="con">${p.t}<small>${p.d}</small></li>`).join('')}
+        ${pc[i].pro.length + pc[i].con.length ? '' : '<li class="none">Right in the middle on everything. No clear wins or losses here.</li>'}
+      </ul></div>`).join('')}</div>
+    ${ties.length ? `<div class="ties">🤝 Tied on: ${ties.join(' · ')}</div>` : ''}
+    <div class="verdict">${verdict}</div>`;
+  out.querySelectorAll('[data-rmab]').forEach(b => b.addEventListener('click', () => removeFromCompare(slots.indexOf(b.dataset.rmab))));
+}
+
+/* --- pointer drag (mouse & pen). Touch uses "Add to compare" so the page still scrolls. --- */
+let drag = null, justDragged = false;
+const ghost = $('ghost');
+const slotAt = e => { const t = document.elementFromPoint(e.clientX, e.clientY); return t && t.closest('.slot'); };
+const overDock = e => { const t = document.elementFromPoint(e.clientX, e.clientY); return t && t.closest('#dock'); };
+document.addEventListener('pointerdown', e => {
+  if (e.button !== 0 || e.pointerType === 'touch') return;
+  const src = e.target.closest('[data-drag]');
+  if (src) drag = { ab: src.dataset.drag, x: e.clientX, y: e.clientY, on: false };
+});
+document.addEventListener('pointermove', e => {
+  if (!drag) return;
+  if (!drag.on) {
+    if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 6) return;
+    drag.on = true; hideTip();
+    document.body.classList.add('dragging'); $('dock').classList.add('hot');
+    ghost.textContent = '🆚 ' + BY[drag.ab].name; ghost.classList.add('on');
+  }
+  ghost.style.left = e.clientX + 'px'; ghost.style.top = e.clientY + 'px';
+  const s = slotAt(e);
+  document.querySelectorAll('.slot').forEach(x => x.classList.toggle('over', x === s));
+});
+document.addEventListener('pointerup', e => {
+  if (!drag) return;
+  if (drag.on) {
+    const s = slotAt(e);
+    if (s) addToCompare(drag.ab, +s.dataset.slot);
+    else if (overDock(e)) addToCompare(drag.ab);
+    justDragged = true; setTimeout(() => justDragged = false, 0);
+    document.body.classList.remove('dragging'); $('dock').classList.remove('hot'); ghost.classList.remove('on');
+    document.querySelectorAll('.slot.over').forEach(x => x.classList.remove('over'));
+  }
+  drag = null;
+});
+document.addEventListener('click', e => { if (justDragged) { e.stopPropagation(); e.preventDefault(); } }, true);
+
+function syncHash() {
+  const vs = slots.filter(Boolean);
+  history.replaceState(null, '', '#' + lens.id + (selected ? '/' + selected : '') + (vs.length ? '/vs=' + vs.join(',') : ''));
+}
+
+// deep links: #phone · #retire/FL · #inc/TX/vs=TX,CA,FL
+const parts = decodeURIComponent(location.hash.slice(1)).split('/');
+if (LENSES.some(l => l.id === parts[0])) lens = LENSES.find(l => l.id === parts[0]);
+const hs = parts.slice(1).find(p => BY[p.toUpperCase()]);
+const hv = parts.find(p => p.startsWith('vs='));
+if (hv) hv.slice(3).split(',').map(x => x.toUpperCase()).filter(x => BY[x]).slice(0, 3).forEach((ab, i) => slots[i] = ab);
+function fitStage() {
+  const st = document.querySelector('.stage');
+  if (window.innerWidth <= 980) { st.style.removeProperty('--stage-h'); return; }
+  const top = st.getBoundingClientRect().top + window.scrollY;
+  const dock = $('dock').offsetHeight + 28;
+  // never taller than the map needs at this width (map is 1010 × 625)
+  const card = document.querySelector('.mapcard'), head = card.querySelector('.lens-head').offsetHeight;
+  const need = (card.clientWidth - 32) * 625 / 1010 + head + 30;
+  st.style.setProperty('--stage-h', Math.round(Math.max(480, Math.min(need, window.innerHeight - top - dock))) + 'px');
+}
+window.addEventListener('resize', fitStage);
+document.fonts && document.fonts.ready.then(fitStage);
+renderPrefs(); renderPodium(); paint(); fitStage();
+if (hs) select(hs.toUpperCase());
 </script>
 </body>
 </html>
